@@ -31,9 +31,10 @@
       </Button>
       <ComboBox fx:id="sessionList" layoutX="77.0" layoutY="359.0" prefHeight="27.0" prefWidth="638.0" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" />
       <TextField fx:id="sessionName" editable="false" prefHeight="28.0" prefWidth="599.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="6.0" />
-      <Button fx:id="openFileButton" layoutX="517.0" layoutY="18.0" mnemonicParsing="false" text="OpenFile" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="8.0" />
+      <Button fx:id="openFileButton" layoutX="517.0" layoutY="18.0" mnemonicParsing="false" text="OpenFile" AnchorPane.rightAnchor="130.0" AnchorPane.topAnchor="8.0" />
       <Label layoutX="238.0" layoutY="48.0" text="Text" AnchorPane.topAnchor="48.0" />
       <Label layoutX="766.0" layoutY="48.0" text="Topic" AnchorPane.topAnchor="48.0" />
       <Label layoutX="903.0" layoutY="47.0" text="value" AnchorPane.topAnchor="47.0" />
+      <Button fx:id="saveFileButton" layoutX="907.0" layoutY="8.0" mnemonicParsing="false" text="SaveFile" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="8.0" />
    </children>
 </AnchorPane>

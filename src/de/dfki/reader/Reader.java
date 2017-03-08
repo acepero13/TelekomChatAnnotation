@@ -56,7 +56,7 @@ public class Reader extends Application{
 //        }
 //    }
     
-        private Stage primaryStage;
+    private Stage primaryStage;
     private AnchorPane rootLayout;
     
     @Override
