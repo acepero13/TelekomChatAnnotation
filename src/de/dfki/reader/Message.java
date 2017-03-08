@@ -5,16 +5,30 @@ package de.dfki.reader;
  */
 
 public class Message {
-    public enum Speaker {
-        USER, AGENT
-    }
     private final int counter;
     private final String text;
     private Speaker speaker;
-
+    private int value;
+    private int topic;
     public Message(int counter, String line) {
         this.counter = counter;
         this.text = line;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    public int getTopic() {
+        return topic;
+    }
+
+    public void setTopic(int topic) {
+        this.topic = topic;
     }
 
     public int getCounter() {
@@ -25,11 +39,15 @@ public class Message {
         return text;
     }
 
+    public Speaker getSpeaker(){
+        return this.speaker;
+    }
+
     public void setSpeaker(Speaker speaker){
         this.speaker = speaker;
     }
 
-    public Speaker getSpeaker(){
-        return this.speaker;
+    public enum Speaker {
+        USER, AGENT
     }
 }

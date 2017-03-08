@@ -11,6 +11,7 @@ public class Conversation {
     private LinkedList<Message> system = new LinkedList<>();
     private LinkedList<String> info = new LinkedList<>();
     private LinkedList<Message> conversation = new LinkedList<>();
+    private int defenseStrategy;
 
 
     public Conversation(String systemName){
@@ -47,5 +48,13 @@ public class Conversation {
 
     public LinkedList<Message> getConversation() {
         return conversation;
+    }
+
+    public int getDefenseStrategy() {
+        return defenseStrategy;
+    }
+
+    public void setDefenseStrategy(int defenseStrategy) {
+        this.defenseStrategy = defenseStrategy;
     }
 }
