@@ -57,4 +57,8 @@ public class Conversation {
     public void setDefenseStrategy(int defenseStrategy) {
         this.defenseStrategy = defenseStrategy;
     }
+
+    LinkedList<String> getInfo() {
+        return info; //To change body of generated methods, choose Tools | Templates.
+    }
 }
