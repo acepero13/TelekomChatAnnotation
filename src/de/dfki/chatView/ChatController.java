@@ -6,10 +6,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.*;
 
-//import de.dfki.csv.CSVReader;
-//import de.dfki.csv.Conversation;
-//import de.dfki.csv.ConversationLine;
-//import de.dfki.csv.metadata.MetaDataObject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -91,9 +87,11 @@ public class ChatController implements Initializable {
         });
 
         sessionPinList.setOnAction((event) -> {
-            current_position = pineList.get(sessionPinList.getValue());
-            chatGridPane.getChildren().clear();
-            addConversationIntoChatFrame(conversations, current_position);
+            if(sessionPinList.getValue() != null){
+                current_position = pineList.get(sessionPinList.getValue());
+                chatGridPane.getChildren().clear();
+                addConversationIntoChatFrame(conversations, current_position);
+        }
         });
 
         openFileButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -106,15 +104,24 @@ public class ChatController implements Initializable {
         pinButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(conversations != null){
+                if (conversations != null) {
                     Conversation conver = conversations.get(current_position);
-                    conver.setPinned(true);
-
-                    if(!pineList.containsKey(sessionobservableList.get(current_position)))
-                    {
-                        pineList.put(sessionobservableList.get(current_position), current_position);
-                        sessionPinList.getItems().add(sessionobservableList.get(current_position));
-                        sessionPinList.setValue(sessionobservableList.get(current_position));
+                    if (!conver.isPinned()) {
+                        conver.setPinned(true);
+                        pinButton.setText("UnPin");
+                        if (!pineList.containsKey(sessionobservableList.get(current_position))) {
+                            pineList.put(sessionobservableList.get(current_position), current_position);
+                            sessionPinList.getItems().add(sessionobservableList.get(current_position));
+                            sessionPinList.setValue(sessionobservableList.get(current_position));
+                        }
+                    } else {
+                        conver.setPinned(false);
+                        pinButton.setText("Pin");
+                        if (pineList.containsKey(sessionobservableList.get(current_position))) {
+                            pineList.remove(sessionobservableList.get(current_position), current_position);
+                            sessionPinList.setValue(null);
+                            sessionPinList.getItems().remove(sessionobservableList.get(current_position));
+                        }
                     }
                 }
             }
@@ -217,6 +224,13 @@ public class ChatController implements Initializable {
     private void addConversationIntoChatFrame(LinkedList<Conversation> conversations, int conNummer) {
         int messageCounter = 0;
         Conversation nextCon = conversations.get(current_position);
+        
+        if (!nextCon.isPinned()) {
+            pinButton.setText("Pin");
+        } else {
+            pinButton.setText("UnPin");
+        }
+        
         if(nextCon.getDefenseStrategy() >= 0)
             strategyField.setText("" + nextCon.getDefenseStrategy());
 
@@ -252,6 +266,12 @@ public class ChatController implements Initializable {
         for (Conversation c : conversations) {
             int messagesInConversation = c.getConversation().size();
             sessionaryLst.add(conversationCounter + "  " + "( " + messagesInConversation + " Message(s) " + ")");
+            if (c.isPinned()) {
+                int conlistNumber = conversationCounter - 1;
+                String s = conversationCounter + "  " + "( " + messagesInConversation + " Message(s) " + ")";
+                pineList.put(s, conlistNumber);
+                sessionPinList.getItems().add(s);
+            }
             conversationCounter++;
         }
         sessionobservableList = FXCollections.observableArrayList(sessionaryLst);
@@ -301,8 +321,6 @@ public class ChatController implements Initializable {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////
     private void showChatOverview() {
 
         chatGridPane = new GridPane();
