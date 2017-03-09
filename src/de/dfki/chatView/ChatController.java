@@ -79,19 +79,12 @@ public class ChatController implements Initializable {
     LinkedList<Conversation> conversations;
 
     HashMap<String, String> annotation = new HashMap<>();
-    private HashMap<String, Integer> pineList = new HashMap<>();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         sessionList.setOnAction((event) -> {
             current_position = sessionList.getSelectionModel().getSelectedIndex();
-            chatGridPane.getChildren().clear();
-            addConversationIntoChatFrame(conversations, current_position);
-        });
-        
-        sessionPinList.setOnAction((event) -> {
-            current_position = pineList.get(sessionPinList.getValue());
             chatGridPane.getChildren().clear();
             addConversationIntoChatFrame(conversations, current_position);
         });
@@ -102,28 +95,21 @@ public class ChatController implements Initializable {
                 handleOpen();
             }
         });
-        
+
         pinButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 if(conversations != null){
                     Conversation conver = conversations.get(current_position);
                     conver.setPinned(true);
-                                        
-                    if(!pineList.containsKey(sessionobservableList.get(current_position)))
-                    {
-                        pineList.put(sessionobservableList.get(current_position), current_position);
-                        sessionPinList.getItems().add(sessionobservableList.get(current_position));
-                        sessionPinList.setValue(sessionobservableList.get(current_position));
-                    }
                 }
             }
         });
 
         saveFileButton.setOnAction((event) -> {
-                handleSave();
+            handleSave();
         });
-        
+
         nextAnot.setOnAction((event) -> {
             int next = reader.getNextUnAnnotatedConversation(current_position);
             if(next != -1 && next < conversations.size())
@@ -133,7 +119,7 @@ public class ChatController implements Initializable {
                 addConversationIntoChatFrame(conversations, current_position);
             }
         });
-        
+
         prevAnot.setOnAction((event) -> {
             int prev = reader.getPreviousUnAnnotatedConversation(current_position);
             if(prev != -1 && prev >= 0)
@@ -143,7 +129,14 @@ public class ChatController implements Initializable {
                 addConversationIntoChatFrame(conversations, current_position);
             }
         });
-        
+
+        strategyField.textProperty().addListener((observable, oldValue, newValue) -> {
+            Conversation con = conversations.get(current_position);
+            if(!newValue.isEmpty())
+            {
+                con.setDefenseStrategy(Integer.parseInt(newValue));
+            }
+        });
         showChatOverview();
     }
 
@@ -169,6 +162,10 @@ public class ChatController implements Initializable {
                         Writer.write(message, file);
                     }
                 }
+                if(c.isPinned())
+                    Writer.write("#" + c.getDefenseStrategy() + "#" + 1 + "\n", file);
+                else
+                    Writer.write("#" + c.getDefenseStrategy() + "#" + 0 + "\n", file);
             }
         }
     }
@@ -197,6 +194,8 @@ public class ChatController implements Initializable {
 
         int messageCounter = 0;
         Conversation con = conversations.getFirst();
+        if(con.getDefenseStrategy() >= 0)
+            strategyField.setText("" + con.getDefenseStrategy());
         LinkedList<Textable> messages = con.getConversation();
         addConversationDialog(messageCounter, messages);
     }
@@ -204,6 +203,8 @@ public class ChatController implements Initializable {
     private void addConversationIntoChatFrame(LinkedList<Conversation> conversations, int conNummer) {
         int messageCounter = 0;
         Conversation nextCon = conversations.get(current_position);
+        if(nextCon.getDefenseStrategy() >= 0)
+            strategyField.setText("" + nextCon.getDefenseStrategy());
 
         LinkedList<Textable> messages = nextCon.getConversation();
         addConversationDialog(messageCounter, messages);
@@ -341,6 +342,8 @@ public class ChatController implements Initializable {
             if (messagePositionWithoutInfo >= 0 && c.getConversation().get(messagePositionWithoutInfo).getValue() != -1) {
                 userValue.setText("" + c.getConversation().get(messagePositionWithoutInfo).getValue());
             }
+
+
             userValue.setId("userValue" + i);
 
             Pane p1 = new Pane();
@@ -368,7 +371,7 @@ public class ChatController implements Initializable {
                 String message = "Sie: " + dialog + "|" + userTopic.getText() + "|" + userValue.getText();
                 annotation.put(userTopic.getId(), message);
                 if (messagePositionWithoutInfo >= 0 && !newValue.isEmpty()) {
-                    
+
                     c.getConversation().get(messagePositionWithoutInfo).setTopic(Integer.parseInt(newValue));
                 }
             });
