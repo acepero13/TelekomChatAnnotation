@@ -19,7 +19,7 @@ public class Message implements Textable {
     }
 
     private void parseTopicAndValue() {
-        if(countMatches("|") == 3){
+        if(countMatches(text, "|") == 3){
             int indexTopic = text.indexOf("|");
             int indexValue = text.indexOf("|", indexTopic + 1);
             int indexLast = text.indexOf("|", indexValue + 1);
@@ -29,7 +29,7 @@ public class Message implements Textable {
         }
     }
 
-    private int countMatches(String findStr){
+    public static int countMatches(String text, String findStr){
         int lastIndex = 0;
         int count = 0;
 
