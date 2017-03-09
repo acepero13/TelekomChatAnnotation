@@ -58,6 +58,8 @@ public class ChatController implements Initializable {
     @FXML
     private Button nextAnot;
     @FXML
+    private Button prevAnot;
+    @FXML
     private ComboBox<String> sessionList;
     @FXML
     private ComboBox<String> sessionPinList;
@@ -118,7 +120,7 @@ public class ChatController implements Initializable {
             }
         });
         
-        previousButton.setOnAction((event) -> {
+        prevAnot.setOnAction((event) -> {
             int prev = reader.getPreviousUnAnnotatedConversation(current_position);
             if(prev != -1 && prev >= 0)
             {
