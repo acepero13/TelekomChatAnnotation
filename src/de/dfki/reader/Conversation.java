@@ -13,7 +13,7 @@ public class Conversation {
     private LinkedList<Textable> conversation = new LinkedList<>();
     private boolean pinned = false;
 
-    private int defenseStrategy;
+    private int defenseStrategy = -1;
 
     public boolean isAnnotated(){
         boolean isAnnotated = true;

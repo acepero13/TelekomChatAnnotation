@@ -81,7 +81,7 @@ public class ChatController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         sessionList.setOnAction((event) -> {
-            current_position = sessionList.getSelectionModel().getSelectedIndex();
+            current_position = Math.max(sessionList.getSelectionModel().getSelectedIndex(), 0);
             chatGridPane.getChildren().clear();
             addConversationIntoChatFrame(conversations, current_position);
         });
@@ -223,7 +223,13 @@ public class ChatController implements Initializable {
 
     private void addConversationIntoChatFrame(LinkedList<Conversation> conversations, int conNummer) {
         int messageCounter = 0;
-        Conversation nextCon = conversations.get(current_position);
+         Conversation nextCon = null;
+        try{
+            nextCon = conversations.get(current_position);
+        }catch(IndexOutOfBoundsException e){
+            int a = 0;
+        }
+        
         
         if (!nextCon.isPinned()) {
             pinButton.setText("Pin");
