@@ -15,7 +15,7 @@ public class Conversation {
 
     private int defenseStrategy;
 
-    public boolean isUnAnnotatedConversation(){
+    public boolean isAnnotated(){
         boolean isAnnotated = true;
         int i = 0;
         while(i< conversation.size() && isAnnotated){

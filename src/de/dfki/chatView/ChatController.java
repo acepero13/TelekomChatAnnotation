@@ -98,8 +98,9 @@ public class ChatController implements Initializable {
         
         nextAnot.setOnAction((event) -> {
             int next = reader.getNextUnAnnotatedConversation(current_position);
-            if(next != -1)
+            if(next != -1 && next < conversations.size())
             {
+                current_position = next;
                 sessionList.getSelectionModel().select(current_position);
                 addConversationIntoChatFrame(conversations, current_position);
             }
