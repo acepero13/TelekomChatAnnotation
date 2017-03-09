@@ -89,6 +89,7 @@ public class ChatController implements Initializable {
         sessionPinList.setOnAction((event) -> {
             if(sessionPinList.getValue() != null){
                 current_position = pineList.get(sessionPinList.getValue());
+                sessionList.getSelectionModel().select(current_position);
                 chatGridPane.getChildren().clear();
                 addConversationIntoChatFrame(conversations, current_position);
         }
@@ -137,6 +138,8 @@ public class ChatController implements Initializable {
             {
                 current_position = next;
                 sessionList.getSelectionModel().select(current_position);
+                if(conversations.get(current_position).getDefenseStrategy() == -1)
+                strategyField.setText("");
                 addConversationIntoChatFrame(conversations, current_position);
             }
         });
@@ -147,6 +150,8 @@ public class ChatController implements Initializable {
             {
                 current_position = prev;
                 sessionList.getSelectionModel().select(current_position);
+                if(conversations.get(current_position).getDefenseStrategy() == -1)
+                strategyField.setText("");
                 addConversationIntoChatFrame(conversations, current_position);
             }
         });
@@ -289,7 +294,6 @@ public class ChatController implements Initializable {
         nextButton.setOnMouseClicked((event) -> {
             chatGridPane.getChildren().clear();
             moveNext(conversations);
-
         });
         previousButton.setOnMouseClicked((event) -> {
             chatGridPane.getChildren().clear();
@@ -305,7 +309,9 @@ public class ChatController implements Initializable {
             if (current_position == sessionobservableList.size() - 1) {
                 nextButton.setDisable(true);
             }
-
+            
+            if(conversations.get(current_position).getDefenseStrategy() == -1)
+                strategyField.setText("");
             addConversationIntoChatFrame(conversations, current_position);
 
         } else {
@@ -321,6 +327,9 @@ public class ChatController implements Initializable {
             if (current_position == 0) {
                 previousButton.setDisable(true);
             }
+            
+            if(conversations.get(current_position).getDefenseStrategy() == -1)
+                strategyField.setText("");
             addConversationIntoChatFrame(conversations, current_position);
         } else {
             previousButton.setDisable(true);
