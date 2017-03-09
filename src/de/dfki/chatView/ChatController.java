@@ -118,6 +118,16 @@ public class ChatController implements Initializable {
             }
         });
         
+        previousButton.setOnAction((event) -> {
+            int prev = reader.getPreviousUnAnnotatedConversation(current_position);
+            if(prev != -1 && prev >= 0)
+            {
+                current_position = prev;
+                sessionList.getSelectionModel().select(current_position);
+                addConversationIntoChatFrame(conversations, current_position);
+            }
+        });
+        
         showChatOverview();
     }
 
