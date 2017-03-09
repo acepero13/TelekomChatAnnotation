@@ -67,14 +67,12 @@ public class ChatController implements Initializable {
     TextReader reader;
 
     LinkedList<Conversation> conversations;
-    
+
     HashMap<String, String> annotation = new HashMap<>();
-
-
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         sessionList.setOnAction((event) -> {
             current_position = sessionList.getSelectionModel().getSelectedIndex();
             chatGridPane.getChildren().clear();
@@ -108,15 +106,15 @@ public class ChatController implements Initializable {
             fillCombobox(conversations);
         }
     }
-    
+
     private void addFirstConversationIntoChatFrame(LinkedList<Conversation> conversations) {
-        
+
         int messageCounter = 0;
         Conversation con = conversations.getFirst();
         LinkedList<Textable> messages = con.getConversation();
         addConversationDialog(messageCounter, messages);
     }
-    
+
     private void addConversationIntoChatFrame(LinkedList<Conversation> conversations, int conNummer) {
         int messageCounter = 0;
         Conversation nextCon = conversations.get(current_position);
@@ -131,11 +129,11 @@ public class ChatController implements Initializable {
                 String text = m.getText();
                 addSystemDialog(messageCounter, text);
                 messageCounter++;
-            } else if(m.getSpeaker() == Message.Speaker.USER){
+            } else if (m.getSpeaker() == Message.Speaker.USER) {
                 String text = m.getText();
                 addUserDialog(messageCounter, text);
                 messageCounter++;
-            } else if(m.getSpeaker() == Message.Speaker.INFO){
+            } else if (m.getSpeaker() == Message.Speaker.INFO) {
                 addInfo(messageCounter, m.getText());
                 messageCounter++;
             }
@@ -171,7 +169,7 @@ public class ChatController implements Initializable {
             movePrevious();
         });
     }
-    
+
     private void moveNext(LinkedList<Conversation> conversations) {
         previousButton.setDisable(false);
         if (current_position < sessionobservableList.size() - 1) {
@@ -187,7 +185,7 @@ public class ChatController implements Initializable {
             nextButton.setDisable(true);
         }
     }
-    
+
     private void movePrevious() {
         nextButton.setDisable(false);
         if (current_position > 0) {
@@ -227,10 +225,10 @@ public class ChatController implements Initializable {
         if (!dialog.equals("")) {
             String userDialog = dialog;
             Label chatMessage = new Label(userDialog);
-            Label speakerLabel = new Label("User:");
+            Label speakerLabel = new Label("User");
 
             chatMessage.setStyle("-fx-background-color: lightskyblue; -fx-alignment: left;");
-            speakerLabel.setStyle("-fx-background-color: lightskyblue; -fx-alignment: left;");
+            speakerLabel.setStyle("-fx-font-weight: bold;");
 
             chatMessage.setAlignment(Pos.TOP_LEFT);
 
@@ -245,15 +243,17 @@ public class ChatController implements Initializable {
             userTopic.setPadding(new Insets(8, 0, 8, 0));
             Conversation c = conversations.get(current_position);
             int messagePositionWithoutInfo = i;
-            if(messagePositionWithoutInfo >=0 && c.getConversation().get(messagePositionWithoutInfo).getTopic() != -1)
-                userTopic.setText(""+c.getConversation().get(messagePositionWithoutInfo).getTopic());
+            if (messagePositionWithoutInfo >= 0 && c.getConversation().get(messagePositionWithoutInfo).getTopic() != -1) {
+                userTopic.setText("" + c.getConversation().get(messagePositionWithoutInfo).getTopic());
+            }
             userTopic.setId("userTopic" + i);
 
             TextField userValue = new TextField();
             userValue.setPrefWidth(100);
             userValue.setPadding(new Insets(8, 0, 8, 0));
-            if(messagePositionWithoutInfo >=0 && c.getConversation().get(messagePositionWithoutInfo).getValue() != -1)
-                userValue.setText(""+c.getConversation().get(messagePositionWithoutInfo).getValue());
+            if (messagePositionWithoutInfo >= 0 && c.getConversation().get(messagePositionWithoutInfo).getValue() != -1) {
+                userValue.setText("" + c.getConversation().get(messagePositionWithoutInfo).getValue());
+            }
             userValue.setId("userValue" + i);
 
             Pane p1 = new Pane();
@@ -276,28 +276,33 @@ public class ChatController implements Initializable {
             chatGridPane.add(chatMessage, 1, i);
             chatGridPane.add(p1, 2, i);
             chatGridPane.add(p2, 3, i);
-            
+
             userTopic.textProperty().addListener((observable, oldValue, newValue) -> {
-                    String message = "Sie: " + dialog + "|" + userTopic.getText() + "|" + userValue.getText();
-                    annotation.put(userTopic.getId(), message);
-                    if(messagePositionWithoutInfo >=0)
-                        c.getConversation().get(messagePositionWithoutInfo).setTopic(Integer.parseInt(newValue));
+                String message = "Sie: " + dialog + "|" + userTopic.getText() + "|" + userValue.getText();
+                annotation.put(userTopic.getId(), message);
+                if (messagePositionWithoutInfo >= 0) {
+                    c.getConversation().get(messagePositionWithoutInfo).setTopic(Integer.parseInt(newValue));
+                }
             });
-            
+
             userValue.textProperty().addListener((observable, oldValue, newValue) -> {
-                    String message = "Sie: " + dialog + "|" + userTopic.getText() + "|" + userValue.getText();
-                    annotation.put(userTopic.getId(), message);
-                    if(messagePositionWithoutInfo >=0)
-                        c.getConversation().get(messagePositionWithoutInfo).setValue(Integer.parseInt(newValue));
+                String message = "Sie: " + dialog + "|" + userTopic.getText() + "|" + userValue.getText();
+                annotation.put(userTopic.getId(), message);
+                if (messagePositionWithoutInfo >= 0) {
+                    c.getConversation().get(messagePositionWithoutInfo).setValue(Integer.parseInt(newValue));
+                }
             });
         }
     }
 
-    private void addSystemDialog(int i, String dialog ) {
+    private void addSystemDialog(int i, String dialog) {
         if (!dialog.equals("")) {
             String systemDialog = "System:" + "\n" + dialog;
             Label chatMessage = new Label(systemDialog);
+            Label speakerLabel = new Label("Agent");
+
             chatMessage.setStyle("-fx-background-color: cornsilk; -fx-alignment: left;");
+            speakerLabel.setStyle("-fx-font-weight: bold;");
 
             chatMessage.setAlignment(Pos.TOP_LEFT);
             chatMessage.setWrapText(true);
@@ -313,52 +318,63 @@ public class ChatController implements Initializable {
             Pane p2 = new Pane();
             p2.setStyle("-fx-background-color: cornsilk; -fx-alignment: left;");
 
+            Pane p3 = new Pane();
+            p3.setStyle("-fx-background-color: cornsilk; -fx-alignment: left;");
+
             TextField systemTopic = new TextField();
             systemTopic.setPrefWidth(100);
             systemTopic.setPadding(new Insets(8, 0, 8, 0));
             Conversation c = conversations.get(current_position);
-            int messagePositionWithoutInfo = i ;
-            if(messagePositionWithoutInfo >=0 && c.getConversation().get(messagePositionWithoutInfo).getTopic() != -1)
-                systemTopic.setText(""+c.getConversation().get(messagePositionWithoutInfo).getTopic());
+            int messagePositionWithoutInfo = i;
+            if (messagePositionWithoutInfo >= 0 && c.getConversation().get(messagePositionWithoutInfo).getTopic() != -1) {
+                systemTopic.setText("" + c.getConversation().get(messagePositionWithoutInfo).getTopic());
+            }
             systemTopic.setId("systemTopic" + i);
 
             TextField systemValue = new TextField();
             systemValue.setPrefWidth(100);
             systemValue.setPadding(new Insets(8, 0, 8, 0));
-            if(messagePositionWithoutInfo >=0 && c.getConversation().get(messagePositionWithoutInfo).getValue() != -1)
-                systemValue.setText(""+c.getConversation().get(messagePositionWithoutInfo).getValue());
+            if (messagePositionWithoutInfo >= 0 && c.getConversation().get(messagePositionWithoutInfo).getValue() != -1) {
+                systemValue.setText("" + c.getConversation().get(messagePositionWithoutInfo).getValue());
+            }
             systemValue.setId("systemValue" + i);
 
             p1.getChildren().add(systemTopic);
             p1.setPadding(new Insets(0, 50, 0, 50));
             p2.getChildren().add(systemValue);
             p2.setPadding(new Insets(0, 50, 0, 50));
+            p3.getChildren().add(speakerLabel);
+            p3.setPadding(new Insets(0, 10, 0, 50));
+            chatGridPane.add(p3, 0, i);
             chatGridPane.add(chatMessage, 1, i);
             chatGridPane.add(p1, 2, i);
             chatGridPane.add(p2, 3, i);
-            
+
             systemTopic.textProperty().addListener((observable, oldValue, newValue) -> {
-                    String message = "{Name}: " + dialog + "|" + systemTopic.getText() + "|" + systemValue.getText();
-                    annotation.put(systemTopic.getId(), message);
-                    if(messagePositionWithoutInfo >=0)
-                        c.getConversation().get(messagePositionWithoutInfo).setTopic(Integer.parseInt(newValue));
+                String message = "{Name}: " + dialog + "|" + systemTopic.getText() + "|" + systemValue.getText();
+                annotation.put(systemTopic.getId(), message);
+                if (messagePositionWithoutInfo >= 0) {
+                    c.getConversation().get(messagePositionWithoutInfo).setTopic(Integer.parseInt(newValue));
+                }
             });
-            
+
             systemValue.textProperty().addListener((observable, oldValue, newValue) -> {
-                    String message = "{Name}: " + dialog + "|" + systemTopic.getText() + "|" + systemValue.getText();
-                    annotation.put(systemTopic.getId(), message);
-                    if(messagePositionWithoutInfo >=0)
-                        c.getConversation().get(messagePositionWithoutInfo).setValue(Integer.parseInt(newValue));
+                String message = "{Name}: " + dialog + "|" + systemTopic.getText() + "|" + systemValue.getText();
+                annotation.put(systemTopic.getId(), message);
+                if (messagePositionWithoutInfo >= 0) {
+                    c.getConversation().get(messagePositionWithoutInfo).setValue(Integer.parseInt(newValue));
+                }
             });
         }
     }
-    
+
     private void addInfo(int i, String info) {
         if (!info.equals("")) {
-            info = "Info:" + "\n" + info;
             Label chatInfo = new Label(info);
+            Label speakerLabel = new Label("Info");
 
             chatInfo.setStyle("-fx-background-color: azure; -fx-alignment: left;");
+            speakerLabel.setStyle("-fx-font-weight: bold;");
 
             chatInfo.setAlignment(Pos.TOP_LEFT);
 
@@ -367,16 +383,13 @@ public class ChatController implements Initializable {
 
             GridPane.setHalignment(chatInfo, HPos.LEFT);
 
-//            chatMessage.getStyleClass().add("message-bubble-left");
-//            chatMessage.setPadding(new Insets(0, 0, 0, 40));
-//            chatGridPane.addRow(i, chatMessage);
-//            TextField userTopic = new TextField();
-//            userTopic.setId("userTopic" + i);
-//            TextField userValue = new TextField();
-//            userValue.setId("userValue" + i);
+            Pane p1 = new Pane();
+            p1.setStyle("-fx-background-color: azure; -fx-alignment: left;");
+            p1.getChildren().add(speakerLabel);
+            p1.setPadding(new Insets(0, 10, 0, 50));
+
+            chatGridPane.add(p1, 0, i);
             chatGridPane.add(chatInfo, 1, i);
-//            chatGridPane.add(userTopic, 1, i);
-//            chatGridPane.add(userValue, 2, i);
         }
     }
 }
