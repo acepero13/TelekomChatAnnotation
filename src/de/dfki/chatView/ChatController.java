@@ -273,6 +273,11 @@ public class ChatController implements Initializable {
 
     public void fillCombobox(LinkedList<Conversation> conversations) {
         int conversationCounter = 1;
+        
+        pineList.clear();
+        sessionPinList.setValue(null);
+        sessionPinList.getItems().clear();
+        
         List sessionaryLst = new ArrayList();
         for (Conversation c : conversations) {
             int messagesInConversation = c.getConversation().size();
