@@ -4,7 +4,7 @@ package de.dfki.reader;
  * Created by alvaro on 3/8/17.
  */
 
-public class Message {
+public class Message implements Textable {
     private final int counter;
     private final String text;
     private Speaker speaker;
@@ -77,6 +77,6 @@ public class Message {
     }
 
     public enum Speaker {
-        USER, AGENT
+        USER, AGENT, INFO
     }
 }

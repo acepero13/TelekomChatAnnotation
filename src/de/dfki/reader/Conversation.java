@@ -10,7 +10,7 @@ public class Conversation {
     private LinkedList<Message> user = new LinkedList<>();
     private LinkedList<Message> system = new LinkedList<>();
     private LinkedList<String> info = new LinkedList<>();
-    private LinkedList<Message> conversation = new LinkedList<>();
+    private LinkedList<Textable> conversation = new LinkedList<>();
     private int defenseStrategy;
 
 
@@ -39,14 +39,16 @@ public class Conversation {
     }
 
     public void addInfoLine(String line){
+        Textable infoLine = new InfoLine(line);
         info.add(line);
+        conversation.add(infoLine);
     }
 
     public String getSystemName(){
         return systemName;
     }
 
-    public LinkedList<Message> getConversation() {
+    public LinkedList<Textable> getConversation() {
         return conversation;
     }
 

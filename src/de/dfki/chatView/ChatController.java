@@ -1,9 +1,7 @@
 package de.dfki.chatView;
 
-import de.dfki.reader.Conversation;
-import de.dfki.reader.Message;
-import de.dfki.reader.TelekomChat;
-import de.dfki.reader.TextReader;
+import de.dfki.reader.*;
+
 import java.io.File;
 import java.net.URL;
 import java.util.*;
@@ -72,8 +70,7 @@ public class ChatController implements Initializable {
     
     HashMap<String, String> annotation = new HashMap<>();
 
-//    private CSVReader csvReader;
-//    private HashMap<String, Conversation> conversations;
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -116,45 +113,33 @@ public class ChatController implements Initializable {
         
         int messageCounter = 0;
         Conversation con = conversations.getFirst();
-
-        LinkedList<String> info = con.getInfo();
-        for (String s : info) {
-            addInfo(messageCounter, s);
-            messageCounter++;
-        }
-        LinkedList<Message> messages = con.getConversation();
-        for (Message m : messages) {
-            if (m.getSpeaker() == Message.Speaker.AGENT) {
-                String text = m.getText();
-                addSystemDialog(messageCounter, text);
-                messageCounter++;
-            } else {
-                String text = m.getText();
-                addUserDialog(messageCounter, text);
-                messageCounter++;
-            }
-        }
+        LinkedList<Textable> messages = con.getConversation();
+        addConversationDialog(messageCounter, messages);
     }
     
     private void addConversationIntoChatFrame(LinkedList<Conversation> conversations, int conNummer) {
         int messageCounter = 0;
         Conversation nextCon = conversations.get(current_position);
-        LinkedList<String> info = nextCon.getInfo();
-        for (String s : info) {
-            addInfo(messageCounter, s);
-            messageCounter++;
-        }
-        LinkedList<Message> messages = nextCon.getConversation();
-        for (Message m : messages) {
+
+        LinkedList<Textable> messages = nextCon.getConversation();
+        addConversationDialog(messageCounter, messages);
+    }
+
+    private void addConversationDialog(int messageCounter, LinkedList<Textable> messages) {
+        for (Textable m : messages) {
             if (m.getSpeaker() == Message.Speaker.AGENT) {
                 String text = m.getText();
                 addSystemDialog(messageCounter, text);
                 messageCounter++;
-            } else {
+            } else if(m.getSpeaker() == Message.Speaker.USER){
                 String text = m.getText();
                 addUserDialog(messageCounter, text);
                 messageCounter++;
+            } else if(m.getSpeaker() == Message.Speaker.INFO){
+                addInfo(messageCounter, m.getText());
+                messageCounter++;
             }
+
         }
     }
 
@@ -243,7 +228,7 @@ public class ChatController implements Initializable {
             String userDialog = dialog;
             Label chatMessage = new Label(userDialog);
             Label speakerLabel = new Label("User:");
-            
+
             chatMessage.setStyle("-fx-background-color: lightskyblue; -fx-alignment: left;");
             speakerLabel.setStyle("-fx-background-color: lightskyblue; -fx-alignment: left;");
 
@@ -259,7 +244,7 @@ public class ChatController implements Initializable {
             userTopic.setPrefWidth(100);
             userTopic.setPadding(new Insets(8, 0, 8, 0));
             Conversation c = conversations.get(current_position);
-            int messagePositionWithoutInfo = i - c.getInfo().size();
+            int messagePositionWithoutInfo = i;
             if(messagePositionWithoutInfo >=0 && c.getConversation().get(messagePositionWithoutInfo).getTopic() != -1)
                 userTopic.setText(""+c.getConversation().get(messagePositionWithoutInfo).getTopic());
             userTopic.setId("userTopic" + i);
@@ -276,7 +261,7 @@ public class ChatController implements Initializable {
 
             Pane p2 = new Pane();
             p2.setStyle("-fx-background-color: lightskyblue; -fx-alignment: left;");
-            
+
             Pane p3 = new Pane();
             p3.setStyle("-fx-background-color: lightskyblue; -fx-alignment: left;");
 
@@ -332,7 +317,7 @@ public class ChatController implements Initializable {
             systemTopic.setPrefWidth(100);
             systemTopic.setPadding(new Insets(8, 0, 8, 0));
             Conversation c = conversations.get(current_position);
-            int messagePositionWithoutInfo = i - c.getInfo().size();
+            int messagePositionWithoutInfo = i ;
             if(messagePositionWithoutInfo >=0 && c.getConversation().get(messagePositionWithoutInfo).getTopic() != -1)
                 systemTopic.setText(""+c.getConversation().get(messagePositionWithoutInfo).getTopic());
             systemTopic.setId("systemTopic" + i);
