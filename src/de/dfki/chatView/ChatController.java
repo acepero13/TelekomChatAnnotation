@@ -383,7 +383,7 @@ public class ChatController implements Initializable {
             chatMessage.setPrefWidth(3000);
 
             GridPane.setHalignment(chatMessage, HPos.LEFT);
-            chatMessage.setPadding(new Insets(0, 10, 0, 20));
+            chatMessage.setPadding(new Insets(0, 10, 0, 0));
 
             TextField userTopic = new TextField();
             userTopic.setPrefWidth(100);
@@ -460,7 +460,7 @@ public class ChatController implements Initializable {
             GridPane.setHalignment(chatMessage, HPos.LEFT);
             chatMessage.setText(chatMessage.getText());
 
-            chatMessage.setPadding(new Insets(0, 10, 0, 20));
+            chatMessage.setPadding(new Insets(0, 10, 0, 0));
 
             Pane p1 = new Pane();
             p1.setStyle("-fx-background-color: cornsilk; -fx-alignment: left;");
