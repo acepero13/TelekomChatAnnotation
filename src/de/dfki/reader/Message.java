@@ -13,6 +13,33 @@ public class Message {
     public Message(int counter, String line) {
         this.counter = counter;
         this.text = line;
+        parseTopicAndValue();
+    }
+
+    private void parseTopicAndValue() {
+        if(countMatches("|") == 3){
+            int indexTopic = text.indexOf("|");
+            int indexValue = text.indexOf("|", indexTopic + 1);
+            int indexLast = text.indexOf("|", indexValue + 1);
+            topic = Integer.parseInt(text.substring(indexTopic + 1, indexValue));
+            value = Integer.parseInt(text.substring(indexValue + 1, indexLast));
+        }
+    }
+
+    private int countMatches(String findStr){
+        int lastIndex = 0;
+        int count = 0;
+
+        while(lastIndex != -1){
+
+            lastIndex = text.indexOf(findStr,lastIndex);
+
+            if(lastIndex != -1){
+                count ++;
+                lastIndex += findStr.length();
+            }
+        }
+        return count;
     }
 
     public int getValue() {
