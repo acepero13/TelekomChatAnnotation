@@ -87,12 +87,12 @@ public class ChatController implements Initializable {
         });
 
         sessionPinList.setOnAction((event) -> {
-            if(sessionPinList.getValue() != null){
+            if (sessionPinList.getValue() != null) {
                 current_position = pineList.get(sessionPinList.getValue());
                 sessionList.getSelectionModel().select(current_position);
                 chatGridPane.getChildren().clear();
                 addConversationIntoChatFrame(conversations, current_position);
-        }
+            }
         });
 
         openFileButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -133,33 +133,36 @@ public class ChatController implements Initializable {
         });
 
         nextAnot.setOnAction((event) -> {
-            int next = reader.getNextUnAnnotatedConversation(current_position);
-            if(next != -1 && next < conversations.size())
-            {
-                current_position = next;
-                sessionList.getSelectionModel().select(current_position);
-                if(conversations.get(current_position).getDefenseStrategy() == -1)
-                strategyField.setText("");
-                addConversationIntoChatFrame(conversations, current_position);
+            if (conversations != null) {
+                int next = reader.getNextUnAnnotatedConversation(current_position);
+                if (next != -1 && next < conversations.size()) {
+                    current_position = next;
+                    sessionList.getSelectionModel().select(current_position);
+                    if (conversations.get(current_position).getDefenseStrategy() == -1) {
+                        strategyField.setText("");
+                    }
+                    addConversationIntoChatFrame(conversations, current_position);
+                }
             }
         });
 
         prevAnot.setOnAction((event) -> {
-            int prev = reader.getPreviousUnAnnotatedConversation(current_position);
-            if(prev != -1 && prev >= 0)
-            {
-                current_position = prev;
-                sessionList.getSelectionModel().select(current_position);
-                if(conversations.get(current_position).getDefenseStrategy() == -1)
-                strategyField.setText("");
-                addConversationIntoChatFrame(conversations, current_position);
+            if (conversations != null) {
+                int prev = reader.getPreviousUnAnnotatedConversation(current_position);
+                if (prev != -1 && prev >= 0) {
+                    current_position = prev;
+                    sessionList.getSelectionModel().select(current_position);
+                    if (conversations.get(current_position).getDefenseStrategy() == -1) {
+                        strategyField.setText("");
+                    }
+                    addConversationIntoChatFrame(conversations, current_position);
+                }
             }
         });
 
         strategyField.textProperty().addListener((observable, oldValue, newValue) -> {
             Conversation con = conversations.get(current_position);
-            if(!newValue.isEmpty())
-            {
+            if (!newValue.isEmpty()) {
                 con.setDefenseStrategy(Integer.parseInt(newValue));
             }
         });
@@ -188,10 +191,11 @@ public class ChatController implements Initializable {
                         Writer.write(message, file);
                     }
                 }
-                if(c.isPinned())
+                if (c.isPinned()) {
                     Writer.write("#" + c.getDefenseStrategy() + "#" + 1 + "\n", file);
-                else
+                } else {
                     Writer.write("#" + c.getDefenseStrategy() + "#" + 0 + "\n", file);
+                }
             }
         }
     }
@@ -220,30 +224,31 @@ public class ChatController implements Initializable {
 
         int messageCounter = 0;
         Conversation con = conversations.getFirst();
-        if(con.getDefenseStrategy() >= 0)
+        if (con.getDefenseStrategy() >= 0) {
             strategyField.setText("" + con.getDefenseStrategy());
+        }
         LinkedList<Textable> messages = con.getConversation();
         addConversationDialog(messageCounter, messages);
     }
 
     private void addConversationIntoChatFrame(LinkedList<Conversation> conversations, int conNummer) {
         int messageCounter = 0;
-         Conversation nextCon = null;
-        try{
+        Conversation nextCon = null;
+        try {
             nextCon = conversations.get(current_position);
-        }catch(IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             int a = 0;
         }
-        
-        
+
         if (!nextCon.isPinned()) {
             pinButton.setText("Pin");
         } else {
             pinButton.setText("UnPin");
         }
-        
-        if(nextCon.getDefenseStrategy() >= 0)
+
+        if (nextCon.getDefenseStrategy() >= 0) {
             strategyField.setText("" + nextCon.getDefenseStrategy());
+        }
 
         LinkedList<Textable> messages = nextCon.getConversation();
         addConversationDialog(messageCounter, messages);
@@ -273,11 +278,11 @@ public class ChatController implements Initializable {
 
     public void fillCombobox(LinkedList<Conversation> conversations) {
         int conversationCounter = 1;
-        
+
         pineList.clear();
         sessionPinList.setValue(null);
         sessionPinList.getItems().clear();
-        
+
         List sessionaryLst = new ArrayList();
         for (Conversation c : conversations) {
             int messagesInConversation = c.getConversation().size();
@@ -314,9 +319,10 @@ public class ChatController implements Initializable {
             if (current_position == sessionobservableList.size() - 1) {
                 nextButton.setDisable(true);
             }
-            
-            if(conversations.get(current_position).getDefenseStrategy() == -1)
+
+            if (conversations.get(current_position).getDefenseStrategy() == -1) {
                 strategyField.setText("");
+            }
             addConversationIntoChatFrame(conversations, current_position);
 
         } else {
@@ -332,9 +338,10 @@ public class ChatController implements Initializable {
             if (current_position == 0) {
                 previousButton.setDisable(true);
             }
-            
-            if(conversations.get(current_position).getDefenseStrategy() == -1)
+
+            if (conversations.get(current_position).getDefenseStrategy() == -1) {
                 strategyField.setText("");
+            }
             addConversationIntoChatFrame(conversations, current_position);
         } else {
             previousButton.setDisable(true);
@@ -394,7 +401,6 @@ public class ChatController implements Initializable {
             if (messagePositionWithoutInfo >= 0 && c.getConversation().get(messagePositionWithoutInfo).getValue() != -1) {
                 userValue.setText("" + c.getConversation().get(messagePositionWithoutInfo).getValue());
             }
-
 
             userValue.setId("userValue" + i);
 
