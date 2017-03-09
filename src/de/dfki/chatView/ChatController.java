@@ -79,12 +79,19 @@ public class ChatController implements Initializable {
     LinkedList<Conversation> conversations;
 
     HashMap<String, String> annotation = new HashMap<>();
+    private HashMap<String, Integer> pineList = new HashMap<>();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         sessionList.setOnAction((event) -> {
             current_position = sessionList.getSelectionModel().getSelectedIndex();
+            chatGridPane.getChildren().clear();
+            addConversationIntoChatFrame(conversations, current_position);
+        });
+        
+        sessionPinList.setOnAction((event) -> {
+            current_position = pineList.get(sessionPinList.getValue());
             chatGridPane.getChildren().clear();
             addConversationIntoChatFrame(conversations, current_position);
         });
@@ -102,6 +109,13 @@ public class ChatController implements Initializable {
                 if(conversations != null){
                     Conversation conver = conversations.get(current_position);
                     conver.setPinned(true);
+                                        
+                    if(!pineList.containsKey(sessionobservableList.get(current_position)))
+                    {
+                        pineList.put(sessionobservableList.get(current_position), current_position);
+                        sessionPinList.getItems().add(sessionobservableList.get(current_position));
+                        sessionPinList.setValue(sessionobservableList.get(current_position));
+                    }
                 }
             }
         });
