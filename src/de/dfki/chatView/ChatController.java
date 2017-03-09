@@ -331,11 +331,17 @@ public class ChatController implements Initializable {
             TextField systemTopic = new TextField();
             systemTopic.setPrefWidth(100);
             systemTopic.setPadding(new Insets(8, 0, 8, 0));
+            Conversation c = conversations.get(current_position);
+            int messagePositionWithoutInfo = i - c.getInfo().size();
+            if(messagePositionWithoutInfo >=0 && c.getConversation().get(messagePositionWithoutInfo).getTopic() != -1)
+                systemTopic.setText(""+c.getConversation().get(messagePositionWithoutInfo).getTopic());
             systemTopic.setId("systemTopic" + i);
 
             TextField systemValue = new TextField();
             systemValue.setPrefWidth(100);
             systemValue.setPadding(new Insets(8, 0, 8, 0));
+            if(messagePositionWithoutInfo >=0 && c.getConversation().get(messagePositionWithoutInfo).getValue() != -1)
+                systemValue.setText(""+c.getConversation().get(messagePositionWithoutInfo).getValue());
             systemValue.setId("systemValue" + i);
 
             p1.getChildren().add(systemTopic);
@@ -349,13 +355,15 @@ public class ChatController implements Initializable {
             systemTopic.textProperty().addListener((observable, oldValue, newValue) -> {
                     String message = "{Name}: " + dialog + "|" + systemTopic.getText() + "|" + systemValue.getText();
                     annotation.put(systemTopic.getId(), message);
-                    System.out.println(annotation);
+                    if(messagePositionWithoutInfo >=0)
+                        c.getConversation().get(messagePositionWithoutInfo).setTopic(Integer.parseInt(newValue));
             });
             
             systemValue.textProperty().addListener((observable, oldValue, newValue) -> {
                     String message = "{Name}: " + dialog + "|" + systemTopic.getText() + "|" + systemValue.getText();
                     annotation.put(systemTopic.getId(), message);
-                    System.out.println(annotation);
+                    if(messagePositionWithoutInfo >=0)
+                        c.getConversation().get(messagePositionWithoutInfo).setValue(Integer.parseInt(newValue));
             });
         }
     }
