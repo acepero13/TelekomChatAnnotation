@@ -374,7 +374,7 @@ public class ChatController implements Initializable {
             Label speakerLabel = new Label("User");
 
             chatMessage.setMinHeight(35);
-            chatMessage.setStyle("-fx-background-color: lightskyblue; -fx-alignment: left;");
+            chatMessage.setStyle("-fx-background-color: #EFFFFF; -fx-alignment: left;");
             speakerLabel.setStyle("-fx-font-weight: bold;");
 
             chatMessage.setAlignment(Pos.TOP_LEFT);
@@ -405,13 +405,13 @@ public class ChatController implements Initializable {
             userValue.setId("userValue" + i);
 
             Pane p1 = new Pane();
-            p1.setStyle("-fx-background-color: lightskyblue; -fx-alignment: left;");
+            p1.setStyle("-fx-background-color: #EFFFFF; -fx-alignment: left;");
 
             Pane p2 = new Pane();
-            p2.setStyle("-fx-background-color: lightskyblue; -fx-alignment: left;");
+            p2.setStyle("-fx-background-color: #EFFFFF; -fx-alignment: left;");
 
             Pane p3 = new Pane();
-            p3.setStyle("-fx-background-color: lightskyblue; -fx-alignment: left;");
+            p3.setStyle("-fx-background-color: #EFFFFF; -fx-alignment: left;");
 
             p1.getChildren().add(userTopic);
             p1.setPadding(new Insets(0, 50, 0, 50));
@@ -523,7 +523,7 @@ public class ChatController implements Initializable {
             Label chatInfo = new Label(info);
             Label speakerLabel = new Label("Info");
 
-            chatInfo.setStyle("-fx-background-color: azure; -fx-alignment: left;");
+//            chatInfo.setStyle("-fx-background-color: white; -fx-alignment: left;");
             speakerLabel.setStyle("-fx-font-weight: bold;");
 
             chatInfo.setAlignment(Pos.TOP_LEFT);
@@ -534,7 +534,7 @@ public class ChatController implements Initializable {
             GridPane.setHalignment(chatInfo, HPos.LEFT);
 
             Pane p1 = new Pane();
-            p1.setStyle("-fx-background-color: azure; -fx-alignment: left;");
+//            p1.setStyle("-fx-background-color: white; -fx-alignment: left;");
             p1.getChildren().add(speakerLabel);
             p1.setPadding(new Insets(0, 10, 0, 50));
 
