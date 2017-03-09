@@ -52,12 +52,31 @@ public class TextReader {
                     Message m = new Message(counter, text);
                     conversation.addSystemLine(m);
                     counter++;
+                } else if(line.startsWith("#")){
+                    parseDefenseAndPin(conversation, line);
+
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         int a = 0;
+
+    }
+
+    private void parseDefenseAndPin(Conversation conversation, String text) {
+        if(Message.countMatches(text,"#") == 2){
+            int indexDefense = text.indexOf("#");
+            int indexPin = text.indexOf("#", indexDefense + 1);
+            int defenseStrategy = Integer.parseInt(text.substring(indexDefense + 1, indexPin));
+            int pined = Integer.parseInt(text.substring(indexPin + 1));
+            conversation.setDefenseStrategy(defenseStrategy);
+            if(pined == 1){
+                conversation.setPinned(true);
+            }else {
+                conversation.setPinned(false);
+            }
+        }
 
     }
 
