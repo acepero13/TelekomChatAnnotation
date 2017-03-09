@@ -246,7 +246,7 @@ public class ChatController implements Initializable {
         ColumnConstraints agentCol = new ColumnConstraints();
         agentCol.setPercentWidth(10);
         ColumnConstraints c0 = new ColumnConstraints();
-        c0.setPercentWidth(100);
+        c0.setPercentWidth(50);
         ColumnConstraints c1 = new ColumnConstraints();
         c1.setPercentWidth(20);
         ColumnConstraints c2 = new ColumnConstraints();
