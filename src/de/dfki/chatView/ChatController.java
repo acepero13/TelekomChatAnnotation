@@ -84,70 +84,6 @@ public class ChatController implements Initializable {
             addConversationIntoChatFrame(conversations, current_position);
         });
 
-//        // TODO
-//        sessionList.setOnAction((event) -> {
-//            String s = sessionList.getSelectionModel().getSelectedItem();
-//            if (s != null) {
-//                // set the setValue of combobox
-////                setCurrentPosition();
-//                chatGridPane.getChildren().clear();
-//                String sessionId = sessionList.getSelectionModel().getSelectedItem();
-//                String[] sessionId1 = sessionId.substring(0, sessionId.length() - 1).split("\\s++");
-//                String sessionId0 = sessionId1[0];
-//                if (!sessionId.equals("")) {
-////                    Conversation conversation = conversations.get(sessionId0);
-//                    int i = 0;
-////                    for (Object objectLine : conversation.getMessages()) {
-////                        ConversationLine line = (ConversationLine) objectLine;
-////                        addUserDialog(i, line.getUserQuestion(), line);
-////                        if (!line.getUserQuestion().equals("")) {
-////                            i++;
-////                        }
-////                        addSystemDialog(i, line.getSystemResponse(), line);
-////                        if (!line.getSystemResponse().equals("")) {
-////                            i++;
-////                        }
-////                    }
-////
-////                    int countMessage = conversation.getMessages().size();
-////                    sessionName.setText(s + "      " + countMessage + " Message(s)");
-//
-//                    sessionName.setText(s);
-//                }
-//
-//            }
-//        });
-//
-//        openFileButton.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                sessionName.setText("openFile");
-//                handleOpen();
-//            }
-//        });
-//
-//        saveFileButton.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                FileChooser fileChooser = new FileChooser();
-//                // Set extension filter
-//                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-//                        "TXT files (*.txt)", "*.txt");
-//                fileChooser.getExtensionFilters().add(extFilter);
-//                File file = fileChooser.showSaveDialog(reader.getPrimaryStage());
-//                if (file != null) {
-//                    // Make sure it has the correct extension
-//                    if (!file.getPath().endsWith(".txt")) {
-//                        file = new File(file.getPath() + ".txt");
-//                    }
-//                }
-//                
-////                TextField tf = (TextField) chatGridPane.lookup("#"+"userTopic0");
-////                String s = tf.getText();
-////                System.out.println("****************   " + s);
-//            }
-//        });
-//
         openFileButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -288,14 +224,15 @@ public class ChatController implements Initializable {
         chatGridPane = new GridPane();
 //        chatGridPane.setGridLinesVisible(true);
 //        chatGridPane.getStyleClass().add("grid");
-
+        ColumnConstraints agentCol = new ColumnConstraints();
+        agentCol.setPercentWidth(10);
         ColumnConstraints c0 = new ColumnConstraints();
         c0.setPercentWidth(100);
         ColumnConstraints c1 = new ColumnConstraints();
         c1.setPercentWidth(20);
         ColumnConstraints c2 = new ColumnConstraints();
         c2.setPercentWidth(20);
-        chatGridPane.getColumnConstraints().addAll(c0, c1, c2);
+        chatGridPane.getColumnConstraints().addAll(agentCol, c0, c1, c2);
         chatGridPane.setVgap(10);
         chatGridPane.setHgap(2);
         screolPane.setContent(chatGridPane);
@@ -303,9 +240,12 @@ public class ChatController implements Initializable {
 
     private void addUserDialog(int i, String dialog) {
         if (!dialog.equals("")) {
-            String userDialog = "User:" + "\n" + dialog;
+            String userDialog = dialog;
             Label chatMessage = new Label(userDialog);
+            Label speakerLabel = new Label("User:");
+            
             chatMessage.setStyle("-fx-background-color: lightskyblue; -fx-alignment: left;");
+            speakerLabel.setStyle("-fx-background-color: lightskyblue; -fx-alignment: left;");
 
             chatMessage.setAlignment(Pos.TOP_LEFT);
 
@@ -336,15 +276,21 @@ public class ChatController implements Initializable {
 
             Pane p2 = new Pane();
             p2.setStyle("-fx-background-color: lightskyblue; -fx-alignment: left;");
+            
+            Pane p3 = new Pane();
+            p3.setStyle("-fx-background-color: lightskyblue; -fx-alignment: left;");
 
             p1.getChildren().add(userTopic);
             p1.setPadding(new Insets(0, 50, 0, 50));
             p2.getChildren().add(userValue);
             p2.setPadding(new Insets(0, 50, 0, 50));
+            p3.getChildren().add(speakerLabel);
+            p3.setPadding(new Insets(0, 10, 0, 50));
 
-            chatGridPane.add(chatMessage, 0, i);
-            chatGridPane.add(p1, 1, i);
-            chatGridPane.add(p2, 2, i);
+            chatGridPane.add(p3, 0, i);
+            chatGridPane.add(chatMessage, 1, i);
+            chatGridPane.add(p1, 2, i);
+            chatGridPane.add(p2, 3, i);
             
             userTopic.textProperty().addListener((observable, oldValue, newValue) -> {
                     String message = "Sie: " + dialog + "|" + userTopic.getText() + "|" + userValue.getText();
@@ -396,9 +342,9 @@ public class ChatController implements Initializable {
             p1.setPadding(new Insets(0, 50, 0, 50));
             p2.getChildren().add(systemValue);
             p2.setPadding(new Insets(0, 50, 0, 50));
-            chatGridPane.add(chatMessage, 0, i);
-            chatGridPane.add(p1, 1, i);
-            chatGridPane.add(p2, 2, i);
+            chatGridPane.add(chatMessage, 1, i);
+            chatGridPane.add(p1, 2, i);
+            chatGridPane.add(p2, 3, i);
             
             systemTopic.textProperty().addListener((observable, oldValue, newValue) -> {
                     String message = "{Name}: " + dialog + "|" + systemTopic.getText() + "|" + systemValue.getText();
@@ -435,7 +381,7 @@ public class ChatController implements Initializable {
 //            userTopic.setId("userTopic" + i);
 //            TextField userValue = new TextField();
 //            userValue.setId("userValue" + i);
-            chatGridPane.add(chatInfo, 0, i);
+            chatGridPane.add(chatInfo, 1, i);
 //            chatGridPane.add(userTopic, 1, i);
 //            chatGridPane.add(userValue, 2, i);
         }
