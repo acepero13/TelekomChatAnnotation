@@ -56,6 +56,8 @@ public class ChatController implements Initializable {
     @FXML
     private Button pinButton;
     @FXML
+    private Button nextAnot;
+    @FXML
     private ComboBox<String> sessionList;
     @FXML
     private TextField sessionName;
@@ -92,6 +94,15 @@ public class ChatController implements Initializable {
 
         saveFileButton.setOnAction((event) -> {
                 handleSave();
+        });
+        
+        nextAnot.setOnAction((event) -> {
+            int next = reader.getNextUnAnnotatedConversation(current_position);
+            if(next != -1)
+            {
+                sessionList.getSelectionModel().select(current_position);
+                addConversationIntoChatFrame(conversations, current_position);
+            }
         });
         
         showChatOverview();
@@ -317,7 +328,8 @@ public class ChatController implements Initializable {
             userTopic.textProperty().addListener((observable, oldValue, newValue) -> {
                 String message = "Sie: " + dialog + "|" + userTopic.getText() + "|" + userValue.getText();
                 annotation.put(userTopic.getId(), message);
-                if (messagePositionWithoutInfo >= 0) {
+                if (messagePositionWithoutInfo >= 0 && !newValue.isEmpty()) {
+                    
                     c.getConversation().get(messagePositionWithoutInfo).setTopic(Integer.parseInt(newValue));
                 }
             });
