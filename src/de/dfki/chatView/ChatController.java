@@ -297,7 +297,7 @@ public class ChatController implements Initializable {
 
     private void addSystemDialog(int i, String dialog) {
         if (!dialog.equals("")) {
-            String systemDialog = "System:" + "\n" + dialog;
+            String systemDialog = dialog;
             Label chatMessage = new Label(systemDialog);
             Label speakerLabel = new Label("Agent");
 
