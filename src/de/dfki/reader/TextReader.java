@@ -61,6 +61,19 @@ public class TextReader {
 
     }
 
+    public int getNextUnAnnotatedConversation(int current_position){
+        int pos = -1;
+        int i = current_position;
+        while (i < conversations.size() && pos < 0){
+            Conversation c = conversations.get(i);
+            if(c.isUnAnnotatedConversation()){
+                pos = i;
+            }
+            i++;
+        }
+        return pos;
+    }
+
     public LinkedList<Conversation> getConversations(){
         return conversations;
     }

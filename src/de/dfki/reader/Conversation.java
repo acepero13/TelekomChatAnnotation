@@ -11,7 +11,22 @@ public class Conversation {
     private LinkedList<Message> system = new LinkedList<>();
     private LinkedList<String> info = new LinkedList<>();
     private LinkedList<Textable> conversation = new LinkedList<>();
+    private boolean pinned = false;
+
     private int defenseStrategy;
+
+    public boolean isUnAnnotatedConversation(){
+        boolean isAnnotated = true;
+        int i = 0;
+        while(i< conversation.size() && isAnnotated){
+            Textable conversationMessages = conversation.get(i);
+            if(conversationMessages.getValue() < 0 || conversationMessages.getTopic() < 0){
+                isAnnotated = false;
+            }
+            i++;
+        }
+        return isAnnotated;
+    }
 
 
     public Conversation(String systemName){
@@ -62,5 +77,13 @@ public class Conversation {
 
     public LinkedList<String> getInfo() {
         return info; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
     }
 }
