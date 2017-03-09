@@ -13,6 +13,8 @@ public class Message {
     public Message(int counter, String line) {
         this.counter = counter;
         this.text = line;
+        this.topic = -1;
+        this.value = -1;
     }
 
     public int getValue() {

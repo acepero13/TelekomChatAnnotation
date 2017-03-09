@@ -77,6 +77,12 @@ public class ChatController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        sessionList.setOnAction((event) -> {
+            current_position = sessionList.getSelectionModel().getSelectedIndex();
+            chatGridPane.getChildren().clear();
+            addConversationIntoChatFrame(conversations, current_position);
+        });
 
 //        // TODO
 //        sessionList.setOnAction((event) -> {
@@ -142,22 +148,6 @@ public class ChatController implements Initializable {
 //            }
 //        });
 //
-//        nextButton.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-////                moveNext();
-//            }
-//        });
-//
-//        previousButton.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-////                movePrevious();
-//            }
-//        });
-//
-////        showChatOverview();
-
         openFileButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -237,7 +227,7 @@ public class ChatController implements Initializable {
     }
 
     public void fillCombobox(LinkedList<Conversation> conversations) {
-        int conversationCounter = 0;
+        int conversationCounter = 1;
         List sessionaryLst = new ArrayList();
         for (Conversation c : conversations) {
             int messagesInConversation = c.getConversation().size();
@@ -330,14 +320,14 @@ public class ChatController implements Initializable {
             userTopic.setPadding(new Insets(8, 0, 8, 0));
             Conversation c = conversations.get(current_position);
             int messagePositionWithoutInfo = i - c.getInfo().size();
-            if(messagePositionWithoutInfo >=0)
+            if(messagePositionWithoutInfo >=0 && c.getConversation().get(messagePositionWithoutInfo).getTopic() != -1)
                 userTopic.setText(""+c.getConversation().get(messagePositionWithoutInfo).getTopic());
             userTopic.setId("userTopic" + i);
 
             TextField userValue = new TextField();
             userValue.setPrefWidth(100);
             userValue.setPadding(new Insets(8, 0, 8, 0));
-            if(messagePositionWithoutInfo >=0)
+            if(messagePositionWithoutInfo >=0 && c.getConversation().get(messagePositionWithoutInfo).getValue() != -1)
                 userValue.setText(""+c.getConversation().get(messagePositionWithoutInfo).getValue());
             userValue.setId("userValue" + i);
 
