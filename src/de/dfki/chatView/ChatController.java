@@ -91,6 +91,14 @@ public class ChatController implements Initializable {
                 handleOpen();
             }
         });
+        
+        pinButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Conversation conver = conversations.get(current_position);
+                conver.setPinned(true);
+            }
+        });
 
         saveFileButton.setOnAction((event) -> {
                 handleSave();
