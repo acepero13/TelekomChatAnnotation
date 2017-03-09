@@ -63,7 +63,7 @@ public class TextReader {
 
     public int getNextUnAnnotatedConversation(int current_position){
         int pos = -1;
-        int i = current_position;
+        int i = current_position + 1;
         while (i < conversations.size() && pos < 0){
             Conversation c = conversations.get(i);
             if(!c.isAnnotated()){
@@ -76,7 +76,7 @@ public class TextReader {
 
     public int getPreviousUnAnnotatedConversation(int current_position){
         int pos = -1;
-        int i = current_position;
+        int i = current_position -1;
         while (i > 0 && pos < 0){
             Conversation c = conversations.get(i);
             if(!c.isAnnotated()){
