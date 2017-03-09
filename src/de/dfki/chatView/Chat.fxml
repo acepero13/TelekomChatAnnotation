@@ -62,8 +62,8 @@
          </children>
       </GridPane>
       <Button fx:id="pinButton" layoutX="703.0" layoutY="8.0" mnemonicParsing="false" text="Pin" AnchorPane.rightAnchor="20.0" />
-      <Button layoutX="56.0" layoutY="564.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="44.0" text="&lt;&lt;" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="60.0" />
-      <Button layoutX="905.0" layoutY="563.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="44.0" text="&gt;&gt;" AnchorPane.bottomAnchor="6.0" AnchorPane.rightAnchor="60.0" />
+      <Button fx:id="prevAnot" layoutX="56.0" layoutY="564.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="44.0" text="&lt;&lt;" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="60.0" />
+      <Button fx:id="nextAnot" layoutX="905.0" layoutY="563.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="44.0" text="&gt;&gt;" AnchorPane.bottomAnchor="6.0" AnchorPane.rightAnchor="60.0" />
       <Label layoutX="313.0" layoutY="13.0" text="Denfence Strategy" AnchorPane.topAnchor="13.0" />
    </children>
 </AnchorPane>
