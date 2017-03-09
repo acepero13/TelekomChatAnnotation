@@ -227,13 +227,14 @@ public class ChatController implements Initializable {
             Label chatMessage = new Label(userDialog);
             Label speakerLabel = new Label("User");
 
+            chatMessage.setMinHeight(35);
             chatMessage.setStyle("-fx-background-color: lightskyblue; -fx-alignment: left;");
             speakerLabel.setStyle("-fx-font-weight: bold;");
 
             chatMessage.setAlignment(Pos.TOP_LEFT);
 
             chatMessage.setWrapText(true);
-            chatMessage.setPrefWidth(1000);
+            chatMessage.setPrefWidth(3000);
 
             GridPane.setHalignment(chatMessage, HPos.LEFT);
             chatMessage.setPadding(new Insets(0, 10, 0, 20));
@@ -301,12 +302,13 @@ public class ChatController implements Initializable {
             Label chatMessage = new Label(systemDialog);
             Label speakerLabel = new Label("Agent");
 
+            chatMessage.setMinHeight(35);
             chatMessage.setStyle("-fx-background-color: cornsilk; -fx-alignment: left;");
             speakerLabel.setStyle("-fx-font-weight: bold;");
 
             chatMessage.setAlignment(Pos.TOP_LEFT);
             chatMessage.setWrapText(true);
-            chatMessage.setPrefWidth(1000);
+            chatMessage.setPrefWidth(3000);
             GridPane.setHalignment(chatMessage, HPos.LEFT);
             chatMessage.setText(chatMessage.getText());
 
