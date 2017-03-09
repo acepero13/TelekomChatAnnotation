@@ -6,7 +6,7 @@ package de.dfki.reader;
 
 public class Message implements Textable {
     private final int counter;
-    private final String text;
+    private String text;
     private Speaker speaker;
     private int value;
     private int topic;
@@ -25,6 +25,7 @@ public class Message implements Textable {
             int indexLast = text.indexOf("|", indexValue + 1);
             topic = Integer.parseInt(text.substring(indexTopic + 1, indexValue));
             value = Integer.parseInt(text.substring(indexValue + 1, indexLast));
+            text = text.substring(0, indexTopic);
         }
     }
 
