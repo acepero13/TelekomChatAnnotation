@@ -54,6 +54,8 @@ public class ChatController implements Initializable {
     @FXML
     private Button previousButton;
     @FXML
+    private Button pinButton;
+    @FXML
     private ComboBox<String> sessionList;
     @FXML
     private TextField sessionName;
@@ -87,44 +89,42 @@ public class ChatController implements Initializable {
                 handleOpen();
             }
         });
-        
+
         saveFileButton.setOnAction((event) -> {
-           FileChooser fileChooser = new FileChooser();
-           FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
-           fileChooser.getExtensionFilters().add(extFilter);
-           
-           File file = fileChooser.showSaveDialog(telecomChat.getPrimaryStage());
-           if(file != null)
-           {
-               for(Conversation c : conversations)
-               {
-                   Writer.write("--------------------------\n", file);
-                   
-                   for(Textable t : c.getConversation())
-                   {
-                       if(t.getSpeaker() == Message.Speaker.INFO)
-                       {
-                           String message = TextReader.INFO_LINE + " "  + t.getText() + "\n";
-                           Writer.write(message, file);
-                       }
-                       else if(t.getSpeaker() == Message.Speaker.USER)
-                       {
-                           String message = TextReader.USER_NAME + ": " + t.getText() +"|" + t.getTopic() + "|" + t.getValue() + "|" + "\n";
-                           Writer.write(message, file);
-                       }
-                       else
-                       {
-                           String message = c.getSystemName() + ": " + t.getText() +"|" + t.getTopic() + "|" + t.getValue() + "|" + "\n";
-                           Writer.write(message, file);
-                       }
-                   }
-               }
-           }
+                handleSave();
         });
+        
         showChatOverview();
     }
 
+    private void handleSave() {
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        File file = fileChooser.showSaveDialog(telecomChat.getPrimaryStage());
+        if (file != null) {
+            for (Conversation c : conversations) {
+                Writer.write("--------------------------\n", file);
+
+                for (Textable t : c.getConversation()) {
+                    if (t.getSpeaker() == Message.Speaker.INFO) {
+                        String message = TextReader.INFO_LINE + " " + t.getText() + "\n";
+                        Writer.write(message, file);
+                    } else if (t.getSpeaker() == Message.Speaker.USER) {
+                        String message = TextReader.USER_NAME + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + "\n";
+                        Writer.write(message, file);
+                    } else {
+                        String message = c.getSystemName() + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + "\n";
+                        Writer.write(message, file);
+                    }
+                }
+            }
+        }
+    }
+
     private void handleOpen() {
+        current_position = 0;
         FileChooser fileChooser = new FileChooser();
 
         // Set extension filter
