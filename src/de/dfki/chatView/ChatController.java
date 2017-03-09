@@ -64,7 +64,7 @@ public class ChatController implements Initializable {
     @FXML
     private ComboBox<String> sessionPinList;
     @FXML
-    private TextField sessionName;
+    private TextField strategyField;
 
     private int current_position = 0;
 
