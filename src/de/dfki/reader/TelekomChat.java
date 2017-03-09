@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 /**
  * Created by alvaro on 3/8/17.
  */
-public class Reader extends Application{
+public class TelekomChat extends Application{
 
     
 //    public static void main(String[] args)

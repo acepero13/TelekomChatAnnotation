@@ -58,7 +58,7 @@ public class Conversation {
         this.defenseStrategy = defenseStrategy;
     }
 
-    LinkedList<String> getInfo() {
+    public LinkedList<String> getInfo() {
         return info; //To change body of generated methods, choose Tools | Templates.
     }
 }
