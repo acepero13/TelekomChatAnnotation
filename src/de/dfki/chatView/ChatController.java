@@ -60,6 +60,8 @@ public class ChatController implements Initializable {
     @FXML
     private ComboBox<String> sessionList;
     @FXML
+    private ComboBox<String> sessionPinList;
+    @FXML
     private TextField sessionName;
 
     private int current_position = 0;
@@ -89,6 +91,16 @@ public class ChatController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 handleOpen();
+            }
+        });
+        
+        pinButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(conversations != null){
+                    Conversation conver = conversations.get(current_position);
+                    conver.setPinned(true);
+                }
             }
         });
 
