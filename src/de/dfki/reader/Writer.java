@@ -16,20 +16,30 @@ import java.util.logging.Logger;
  * @author EmpaT
  */
 public class Writer {
-    
-    public static void write(String text, File file)
+
+    private final File file;
+    private final FileWriter fileWriter;
+
+    public Writer(File file) throws IOException {
+        this.file = file;
+        fileWriter = new FileWriter(file, false);
+    }
+    public  void write(String text)
     {
-        FileWriter fileWriter = null;
-        
         try {
-            
-            fileWriter = new FileWriter(file, false);
-//            fileWriter.write("");
-//            fileWriter.close();
             fileWriter.write(text);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void close(){
+        try {
             fileWriter.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Writer.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     

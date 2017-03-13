@@ -3,6 +3,7 @@ package de.dfki.chatView;
 import de.dfki.reader.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -45,7 +46,9 @@ public class ChatController implements Initializable {
     @FXML
     private Button openFileButton;
     @FXML
-    private Button saveFileButton;
+    private Button saveAs;
+    @FXML
+    private Button saveFile;
     @FXML
     private Button nextButton;
     @FXML
@@ -81,6 +84,7 @@ public class ChatController implements Initializable {
 
     HashMap<String, String> annotation = new HashMap<>();
     private HashMap<String, Integer> pineList = new HashMap<>();
+    private File file;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -133,9 +137,19 @@ public class ChatController implements Initializable {
             }
         });
 
-        saveFileButton.setOnAction((event) -> {
-            handleSave();
+        saveAs.setOnAction((event) -> {
+            saveAsAction();
         });
+
+        saveFile.setOnAction(event -> {
+            if(file == null){
+                saveAsAction();
+            }else{
+                handleSave();
+            }
+        });
+
+
 
         nextAnot.setOnAction((event) -> {
             if (conversations != null) {
@@ -193,6 +207,14 @@ public class ChatController implements Initializable {
         showChatOverview();
     }
 
+    private void saveAsAction() {
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+        file = fileChooser.showSaveDialog(telecomChat.getPrimaryStage());
+        handleSave();
+    }
+
     private void goToConversation() {
         String value = goToField.getText();
         if(value.equals("")){
@@ -212,34 +234,37 @@ public class ChatController implements Initializable {
     }
 
     private void handleSave() {
-        FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
-        fileChooser.getExtensionFilters().add(extFilter);
 
-        File file = fileChooser.showSaveDialog(telecomChat.getPrimaryStage());
-        if (file != null) {
-            for (Conversation c : conversations) {
-                Writer.write("--------------------------\n", file);
-
-                for (Textable t : c.getConversation()) {
-                    if (t.getSpeaker() == Message.Speaker.INFO) {
-                        String message = TextReader.INFO_LINE + " " + t.getText() + "\n";
-                        Writer.write(message, file);
-                    } else if (t.getSpeaker() == Message.Speaker.USER) {
-                        String message = TextReader.USER_NAME + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + "\n";
-                        Writer.write(message, file);
+        try {
+            Writer writer = new Writer(file);
+            if (file != null) {
+                for (Conversation c : conversations) {
+                    writer.write("--------------------------\n");
+                    for (Textable t : c.getConversation()) {
+                        if (t.getSpeaker() == Message.Speaker.INFO) {
+                            String message = TextReader.INFO_LINE + " " + t.getText() + "\n";
+                            writer.write(message);
+                        } else if (t.getSpeaker() == Message.Speaker.USER) {
+                            String message = TextReader.USER_NAME + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + "\n";
+                            writer.write(message);
+                        } else {
+                            String message = c.getSystemName() + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + "\n";
+                            writer.write(message);
+                        }
+                    }
+                    if (c.isPinned()) {
+                        writer.write("#" + c.getDefenseStrategy() + "#" + 1 + "\n");
                     } else {
-                        String message = c.getSystemName() + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + "\n";
-                        Writer.write(message, file);
+                        writer.write("#" + c.getDefenseStrategy() + "#" + 0 + "\n");
                     }
                 }
-                if (c.isPinned()) {
-                    Writer.write("#" + c.getDefenseStrategy() + "#" + 1 + "\n", file);
-                } else {
-                    Writer.write("#" + c.getDefenseStrategy() + "#" + 0 + "\n", file);
-                }
+                writer.close();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+
     }
 
     private void handleOpen() {
