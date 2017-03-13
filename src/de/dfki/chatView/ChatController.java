@@ -20,11 +20,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 
 /**
@@ -172,14 +173,42 @@ public class ChatController implements Initializable {
         });
         
         goTo.setOnAction((event) -> {
-            
+            goToConversation();
+
+        });
+
+        goToField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent ke)
+            {
+                if (ke.getCode().equals(KeyCode.ENTER))
+                {
+                    goToConversation();
+                }
+            }
         });
         
-        goToField.textProperty().addListener((observable, oldValue, newValue) -> {
-        ////
-        });
+
         
         showChatOverview();
+    }
+
+    private void goToConversation() {
+        String value = goToField.getText();
+        if(value.equals("")){
+            return;
+        }
+
+        try {
+            int conversationNumber = Integer.valueOf(value) - 1;
+            if(conversationNumber >= 0 && conversationNumber < conversations.size()){
+                current_position = conversationNumber;
+                moveToConversation();
+            }
+        }catch (NumberFormatException e){
+
+        }
+
     }
 
     private void handleSave() {
@@ -316,7 +345,7 @@ public class ChatController implements Initializable {
 
         nextButton.setOnMouseClicked((event) -> {
             chatGridPane.getChildren().clear();
-            moveNext(conversations);
+            moveNext();
         });
         previousButton.setOnMouseClicked((event) -> {
             chatGridPane.getChildren().clear();
@@ -324,23 +353,29 @@ public class ChatController implements Initializable {
         });
     }
 
-    private void moveNext(LinkedList<Conversation> conversations) {
+    private void moveNext() {
         previousButton.setDisable(false);
         if (current_position < sessionobservableList.size() - 1) {
             current_position++;
-            sessionList.getSelectionModel().select(current_position);
-            if (current_position == sessionobservableList.size() - 1) {
-                nextButton.setDisable(true);
-            }
-
-            if (conversations.get(current_position).getDefenseStrategy() == -1) {
-                strategyField.setText("");
-            }
-            addConversationIntoChatFrame(conversations, current_position);
-
-        } else {
+            moveToConversation();
+        }else {
             nextButton.setDisable(true);
         }
+    }
+
+    private void moveToConversation() {
+
+        sessionList.getSelectionModel().select(current_position);
+        if (current_position == sessionobservableList.size() - 1) {
+            nextButton.setDisable(true);
+        }
+
+        if (conversations.get(current_position).getDefenseStrategy() == -1) {
+            strategyField.setText("");
+        }
+        addConversationIntoChatFrame(conversations, current_position);
+
+
     }
 
     private void movePrevious() {

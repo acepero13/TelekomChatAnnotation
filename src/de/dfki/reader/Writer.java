@@ -23,7 +23,7 @@ public class Writer {
         
         try {
             
-            fileWriter = new FileWriter(file, true);
+            fileWriter = new FileWriter(file, false);
 //            fileWriter.write("");
 //            fileWriter.close();
             fileWriter.write(text);
