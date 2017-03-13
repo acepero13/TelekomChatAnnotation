@@ -56,11 +56,15 @@ public class ChatController implements Initializable {
     @FXML
     private Button prevAnot;
     @FXML
+    private Button goTo;
+    @FXML
     private ComboBox<String> sessionList;
     @FXML
     private ComboBox<String> sessionPinList;
     @FXML
     private TextField strategyField;
+    @FXML
+    private TextField goToField;
 
     private int current_position = 0;
 
@@ -166,6 +170,15 @@ public class ChatController implements Initializable {
                 con.setDefenseStrategy(Integer.parseInt(newValue));
             }
         });
+        
+        goTo.setOnAction((event) -> {
+            
+        });
+        
+        goToField.textProperty().addListener((observable, oldValue, newValue) -> {
+        ////
+        });
+        
         showChatOverview();
     }
 

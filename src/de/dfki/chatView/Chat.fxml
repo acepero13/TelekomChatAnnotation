@@ -90,5 +90,7 @@
             <Font size="17.0" />
          </font>
       </Label>
+      <TextField fx:id="goToField" layoutX="498.0" layoutY="569.0" prefHeight="28.0" prefWidth="126.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="420.0" />
+      <Button fx:id="goTo" layoutX="631.0" layoutY="551.0" mnemonicParsing="false" text="Go To" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="360.0" />
    </children>
 </AnchorPane>
