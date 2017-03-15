@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -17,7 +23,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="600.0" prefWidth="1000.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.dfki.chatView.ChatController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="600.0" prefWidth="1000.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.dfki.chatView.ChatController">
     <stylesheets>
         <URL value="@chat.css" />
     </stylesheets>
@@ -28,12 +34,12 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Button>
-      <Button fx:id="nextButton" layoutX="318.0" layoutY="559.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="44.0" text="&gt;" AnchorPane.bottomAnchor="6.0" AnchorPane.rightAnchor="644.0">
+      <Button fx:id="nextButton" layoutX="306.0" layoutY="560.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="44.0" text="&gt;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="306.0">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Button>
-      <ComboBox fx:id="sessionList" layoutX="119.0" layoutY="560.0" prefHeight="34.0" prefWidth="180.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="119.0" AnchorPane.rightAnchor="701.0" />
+      <ComboBox fx:id="sessionList" layoutX="119.0" layoutY="560.0" prefHeight="34.0" prefWidth="180.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="119.0" />
       <TextField fx:id="strategyField" layoutX="860.0" layoutY="562.0" prefHeight="28.0" prefWidth="82.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="58.0" />
       <GridPane layoutY="86.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <columnConstraints>
@@ -78,27 +84,27 @@
             </Label>
          </children>
       </GridPane>
-      <Button fx:id="pinButton" layoutX="905.0" layoutY="44.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="70.0" text="Pin" AnchorPane.rightAnchor="25.0" />
+      <Button fx:id="pinButton" layoutX="905.0" layoutY="44.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="70.0" text="Pin" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="44.0" />
       <Button fx:id="prevAnot" layoutX="10.0" layoutY="559.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="44.0" text="&lt;&lt;" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="10.0">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Button>
-      <Button fx:id="nextAnot" layoutX="362.0" layoutY="559.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="44.0" text="&gt;&gt;" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="594.0">
+      <Button fx:id="nextAnot" layoutX="363.0" layoutY="561.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="44.0" text="&gt;&gt;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="363.0">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Button>
       <Separator layoutY="85.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="85.0" />
-      <ComboBox fx:id="sessionPinList" layoutX="745.0" layoutY="44.0" prefWidth="150.0" AnchorPane.rightAnchor="105.0" />
+      <ComboBox fx:id="sessionPinList" layoutX="745.0" layoutY="44.0" prefWidth="150.0" AnchorPane.rightAnchor="105.0" AnchorPane.topAnchor="44.0" />
       <Label layoutX="721.0" layoutY="565.0" text="Defence Strategy" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="149.0">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="goToField" layoutX="76.0" layoutY="44.0" prefHeight="28.0" prefWidth="55.0" AnchorPane.leftAnchor="76.0" AnchorPane.topAnchor="44.0" />
-      <Button fx:id="goTo" layoutX="137.0" layoutY="44.0" mnemonicParsing="false" text="Go To" AnchorPane.leftAnchor="137.0" AnchorPane.topAnchor="44.0" />
-      <ComboBox fx:id="assessmentCombo" layoutX="239.0" layoutY="44.0" prefHeight="28.0" prefWidth="108.0" />
-      <ComboBox fx:id="assessmentResultCombo" layoutX="350.0" layoutY="44.0" prefHeight="28.0" prefWidth="180.0" />
-      <MenuBar layoutX="3.0" layoutY="-1.0" AnchorPane.topAnchor="8.0">
+      <TextField fx:id="goToField" layoutX="76.0" layoutY="44.0" prefHeight="28.0" prefWidth="55.0" AnchorPane.leftAnchor="4.0" AnchorPane.topAnchor="44.0" />
+      <Button fx:id="goTo" layoutX="77.0" layoutY="45.0" mnemonicParsing="false" text="Go To" AnchorPane.leftAnchor="77.0" AnchorPane.topAnchor="45.0" />
+      <ComboBox fx:id="assessmentCombo" layoutX="239.0" layoutY="44.0" prefHeight="28.0" prefWidth="108.0" AnchorPane.leftAnchor="239.0" AnchorPane.topAnchor="44.0" />
+      <ComboBox fx:id="assessmentResultCombo" layoutX="350.0" layoutY="44.0" prefHeight="28.0" prefWidth="180.0" AnchorPane.leftAnchor="350.0" AnchorPane.topAnchor="44.0" />
+      <MenuBar layoutX="3.0" layoutY="-1.0" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="8.0">
         <menus>
           <Menu fx:id="menu" mnemonicParsing="false" text="File">
             <items>
@@ -109,8 +115,8 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Label layoutX="436.0" layoutY="563.0" prefHeight="27.0" prefWidth="128.0" text="Overall Assessment" />
-      <TextField fx:id="assessmentTextField" layoutX="572.0" layoutY="563.0" prefHeight="27.0" prefWidth="82.0" />
-      <Separator layoutX="-14.0" layoutY="37.0" prefHeight="3.0" prefWidth="1011.0" AnchorPane.leftAnchor="-14.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="37.0" />
+      <Label layoutX="436.0" layoutY="563.0" prefHeight="27.0" prefWidth="128.0" text="Overall Assessment" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="436.0" />
+      <TextField fx:id="assessmentTextField" layoutX="572.0" layoutY="563.0" prefHeight="27.0" prefWidth="82.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="572.0" />
+      <Separator layoutX="-14.0" layoutY="37.0" prefHeight="3.0" prefWidth="1011.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="37.0" />
    </children>
 </AnchorPane>
