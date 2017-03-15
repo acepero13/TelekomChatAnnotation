@@ -213,7 +213,7 @@ public class ChatController implements Initializable {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TCA files (*.tca)", "*.tca");
         fileChooser.getExtensionFilters().add(extFilter);
         file = fileChooser.showSaveDialog(telecomChat.getPrimaryStage());
-        handleSave();
+        handleSave();  
     }
 
     private void goToConversation() {
@@ -237,8 +237,8 @@ public class ChatController implements Initializable {
     private void handleSave() {
 
         try {
-            Writer writer = new Writer(file);
             if (file != null) {
+            Writer writer = new Writer(file);
                 for (Conversation c : conversations) {
                     writer.write("--------------------------\n");
                     for (Textable t : c.getConversation()) {
