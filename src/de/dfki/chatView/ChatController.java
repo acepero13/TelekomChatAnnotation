@@ -71,6 +71,10 @@ public class ChatController implements Initializable {
     private TextField strategyField;
     @FXML
     private TextField goToField;
+    @FXML
+    private ComboBox<String> assessmentCombo;
+    @FXML
+    private ComboBox<String> assessmentResultCombo;
 
     private int current_position = 0;
 
@@ -144,14 +148,9 @@ public class ChatController implements Initializable {
             saveAsAction();
         });
 
-
         saveFile.setOnAction(event -> {
             genericSave();
         });
-
-
-
-
 
         nextAnot.setOnAction((event) -> {
             if (conversations != null) {
@@ -187,7 +186,7 @@ public class ChatController implements Initializable {
                 con.setDefenseStrategy(Integer.parseInt(newValue));
             }
         });
-        
+
         goTo.setOnAction((event) -> {
             goToConversation();
 
@@ -195,27 +194,24 @@ public class ChatController implements Initializable {
 
         goToField.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
-            public void handle(KeyEvent ke)
-            {
-                if (ke.getCode().equals(KeyCode.ENTER))
-                {
+            public void handle(KeyEvent ke) {
+                if (ke.getCode().equals(KeyCode.ENTER)) {
                     goToConversation();
                 }
             }
         });
-        
 
-        
+        fillAssessmentCombo();
         showChatOverview();
 
-
+         
 
     }
 
     private void genericSave() {
-        if(file == null){
+        if (file == null) {
             saveAsAction();
-        }else{
+        } else {
             handleSave();
         }
     }
@@ -225,22 +221,22 @@ public class ChatController implements Initializable {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TCA files (*.tca)", "*.tca");
         fileChooser.getExtensionFilters().add(extFilter);
         file = fileChooser.showSaveDialog(telecomChat.getPrimaryStage());
-        handleSave();  
+        handleSave();
     }
 
     private void goToConversation() {
         String value = goToField.getText();
-        if(value.equals("")){
+        if (value.equals("")) {
             return;
         }
 
         try {
             int conversationNumber = Integer.valueOf(value) - 1;
-            if(conversationNumber >= 0 && conversationNumber < conversations.size()){
+            if (conversationNumber >= 0 && conversationNumber < conversations.size()) {
                 current_position = conversationNumber;
                 moveToConversation();
             }
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
 
         }
 
@@ -250,7 +246,7 @@ public class ChatController implements Initializable {
 
         try {
             if (file != null) {
-            Writer writer = new Writer(file);
+                Writer writer = new Writer(file);
                 for (Conversation c : conversations) {
                     writer.write("--------------------------\n");
                     for (Textable t : c.getConversation()) {
@@ -277,7 +273,6 @@ public class ChatController implements Initializable {
             e.printStackTrace();
         }
 
-
     }
 
     private void handleOpen() {
@@ -299,7 +294,7 @@ public class ChatController implements Initializable {
             conversations = reader.getConversations();
             addFirstConversationIntoChatFrame(conversations);
             fillCombobox(conversations);
-            if(filename.contains(".tca")){
+            if (filename.contains(".tca")) {
                 this.file = file;
             }
         }
@@ -402,13 +397,23 @@ public class ChatController implements Initializable {
             movePrevious();
         });
     }
+    
+    private void fillAssessmentCombo() {
+
+        List assesmentList = new ArrayList();
+        assesmentList.add("Empty");
+        assesmentList.add("Conspicuous");
+        assesmentList.add("Not Conspicuous");
+        
+        assessmentCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
+    }
 
     private void moveNext() {
         previousButton.setDisable(false);
         if (current_position < sessionobservableList.size() - 1) {
             current_position++;
             moveToConversation();
-        }else {
+        } else {
             nextButton.setDisable(true);
         }
     }
@@ -424,7 +429,6 @@ public class ChatController implements Initializable {
             strategyField.setText("");
         }
         addConversationIntoChatFrame(conversations, current_position);
-
 
     }
 
