@@ -22,6 +22,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -142,13 +144,12 @@ public class ChatController implements Initializable {
             saveAsAction();
         });
 
+
         saveFile.setOnAction(event -> {
-            if(file == null){
-                saveAsAction();
-            }else{
-                handleSave();
-            }
+            genericSave();
         });
+
+
 
 
 
@@ -206,6 +207,17 @@ public class ChatController implements Initializable {
 
         
         showChatOverview();
+
+
+
+    }
+
+    private void genericSave() {
+        if(file == null){
+            saveAsAction();
+        }else{
+            handleSave();
+        }
     }
 
     private void saveAsAction() {
@@ -291,6 +303,13 @@ public class ChatController implements Initializable {
                 this.file = file;
             }
         }
+
+        saveFile.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN), new Runnable() {
+            @Override
+            public void run() {
+                genericSave();
+            }
+        });
     }
 
     private void addFirstConversationIntoChatFrame(LinkedList<Conversation> conversations) {
