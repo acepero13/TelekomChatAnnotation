@@ -211,8 +211,6 @@ public class ChatController implements Initializable {
         fillAssessmentCombo();
         showChatOverview();
 
-         
-
     }
 
     private void genericSave() {
@@ -261,7 +259,7 @@ public class ChatController implements Initializable {
                             String message = TextReader.INFO_LINE + " " + t.getText() + "\n";
                             writer.write(message);
                         } else if (t.getSpeaker() == Message.Speaker.USER) {
-                            String message = TextReader.USER_NAME + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + t.getDefenseStrategy() + "|" +"\n";
+                            String message = TextReader.USER_NAME + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + t.getDefenseStrategy() + "|" + "\n";
                             writer.write(message);
                         } else {
                             String message = c.getSystemName() + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + "\n";
@@ -269,7 +267,7 @@ public class ChatController implements Initializable {
                         }
                     }
                     if (c.isPinned()) {
-                        writer.write("#" + c.getDefenseStrategy() + "#" + 1 + "#" + c.getAssesment() +"\n");
+                        writer.write("#" + c.getDefenseStrategy() + "#" + 1 + "#" + c.getAssesment() + "\n");
                     } else {
                         writer.write("#" + c.getDefenseStrategy() + "#" + 0 + "#" + c.getAssesment() + "\n");
                     }
@@ -404,14 +402,14 @@ public class ChatController implements Initializable {
             movePrevious();
         });
     }
-    
+
     private void fillAssessmentCombo() {
 
         List assesmentList = new ArrayList();
         assesmentList.add("Empty");
         assesmentList.add("Conspicuous");
         assesmentList.add("Not Conspicuous");
-        
+
         assessmentCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
     }
 
@@ -513,8 +511,6 @@ public class ChatController implements Initializable {
                 userValue.setText("" + c.getConversation().get(messagePositionWithoutInfo).getValue());
             }
 
-
-
             userValue.setId("userValue" + i);
 
             Pane p1 = new Pane();
@@ -537,7 +533,7 @@ public class ChatController implements Initializable {
             chatGridPane.add(chatMessage, 1, i);
             chatGridPane.add(p1, 2, i);
             chatGridPane.add(p2, 3, i);
-            
+
             ///////////////////////////////////////////////////////////////////////////////////////
             TextField defenceStrategy = new TextField();
             defenceStrategy.setPrefWidth(100);
@@ -555,8 +551,9 @@ public class ChatController implements Initializable {
                 String message = "Sie: " + dialog + "|" + userTopic.getText() + "|" + userValue.getText();
                 annotation.put(userTopic.getId(), message);
                 if (messagePositionWithoutInfo >= 0 && !newValue.isEmpty()) {
-
-                    c.getConversation().get(messagePositionWithoutInfo).setTopic(Integer.parseInt(newValue));
+                    if (isNumeric(newValue)) {
+                        c.getConversation().get(messagePositionWithoutInfo).setTopic(Integer.parseInt(newValue));
+                    }
                 }
             });
 
@@ -564,13 +561,17 @@ public class ChatController implements Initializable {
                 String message = "Sie: " + dialog + "|" + userTopic.getText() + "|" + userValue.getText();
                 annotation.put(userTopic.getId(), message);
                 if (messagePositionWithoutInfo >= 0) {
-                    c.getConversation().get(messagePositionWithoutInfo).setValue(Integer.parseInt(newValue));
+                    if (isNumeric(newValue)) {
+                        c.getConversation().get(messagePositionWithoutInfo).setValue(Integer.parseInt(newValue));
+                    }
                 }
             });
 
             defenceStrategy.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (messagePositionWithoutInfo >= 0) {
-                    c.getConversation().get(messagePositionWithoutInfo).setDefenseStrategy(Integer.parseInt(newValue));
+                    if (isNumeric(newValue)) {
+                        c.getConversation().get(messagePositionWithoutInfo).setDefenseStrategy(Integer.parseInt(newValue));
+                    }
                 }
             });
 
@@ -578,7 +579,6 @@ public class ChatController implements Initializable {
 
                 defenceStrategy.setText("" + c.getConversation().get(messagePositionWithoutInfo).getDefenseStrategy());
             }
-
 
         }
     }
@@ -638,7 +638,7 @@ public class ChatController implements Initializable {
             chatGridPane.add(chatMessage, 1, i);
             chatGridPane.add(p1, 2, i);
             chatGridPane.add(p2, 3, i);
-            
+
             Pane p4 = new Pane();
             p4.setStyle("-fx-background-color: cornsilk; -fx-alignment: left;");
 
@@ -650,7 +650,9 @@ public class ChatController implements Initializable {
                 String message = "{Name}: " + dialog + "|" + systemTopic.getText() + "|" + systemValue.getText();
                 annotation.put(systemTopic.getId(), message);
                 if (messagePositionWithoutInfo >= 0) {
-                    c.getConversation().get(messagePositionWithoutInfo).setTopic(Integer.parseInt(newValue));
+                    if (isNumeric(newValue)) {
+                        c.getConversation().get(messagePositionWithoutInfo).setTopic(Integer.parseInt(newValue));
+                    }
                 }
             });
 
@@ -658,7 +660,9 @@ public class ChatController implements Initializable {
                 String message = "{Name}: " + dialog + "|" + systemTopic.getText() + "|" + systemValue.getText();
                 annotation.put(systemTopic.getId(), message);
                 if (messagePositionWithoutInfo >= 0) {
-                    c.getConversation().get(messagePositionWithoutInfo).setValue(Integer.parseInt(newValue));
+                    if (isNumeric(newValue)) {
+                        c.getConversation().get(messagePositionWithoutInfo).setValue(Integer.parseInt(newValue));
+                    }
                 }
             });
         }
@@ -687,5 +691,9 @@ public class ChatController implements Initializable {
             chatGridPane.add(p1, 0, i);
             chatGridPane.add(chatInfo, 1, i);
         }
+    }
+
+    public static boolean isNumeric(String str) {
+        return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
     }
 }
