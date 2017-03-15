@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -23,12 +17,12 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="600.0" prefWidth="1000.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.dfki.chatView.ChatController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="600.0" prefWidth="1000.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.dfki.chatView.ChatController">
     <stylesheets>
         <URL value="@chat.css" />
     </stylesheets>
    <children>
-      <ScrollPane fx:id="screolPane" fitToWidth="true" layoutX="2.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="468.0" prefWidth="1000.0" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0" />
+      <ScrollPane fx:id="screolPane" fitToWidth="true" layoutX="2.0" layoutY="112.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="426.0" prefWidth="1000.0" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="112.0" />
       <Button fx:id="previousButton" layoutX="14.0" layoutY="359.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="44.0" text="&lt;" textAlignment="CENTER" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="60.0">
          <font>
             <Font name="System Bold" size="18.0" />
@@ -41,7 +35,7 @@
       </Button>
       <ComboBox fx:id="sessionList" layoutX="119.0" layoutY="560.0" prefHeight="34.0" prefWidth="180.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="119.0" AnchorPane.rightAnchor="701.0" />
       <TextField fx:id="strategyField" layoutX="860.0" layoutY="562.0" prefHeight="28.0" prefWidth="82.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="58.0" />
-      <GridPane layoutX="4.0" layoutY="39.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <GridPane layoutY="86.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" percentWidth="60.0" />
@@ -77,14 +71,14 @@
                <font>
                   <Font name="System Bold" size="13.0" />
                </font></Label>
-            <Label text="defence Strategy" GridPane.columnIndex="4">
+            <Label text="Defence Strategy" GridPane.columnIndex="4">
                <font>
-                  <Font size="10.0" />
+                  <Font name="System Bold" size="11.0" />
                </font>
             </Label>
          </children>
       </GridPane>
-      <Button fx:id="pinButton" layoutX="703.0" layoutY="8.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="70.0" text="Pin" AnchorPane.rightAnchor="20.0" />
+      <Button fx:id="pinButton" layoutX="905.0" layoutY="44.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="70.0" text="Pin" AnchorPane.rightAnchor="25.0" />
       <Button fx:id="prevAnot" layoutX="10.0" layoutY="559.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="44.0" text="&lt;&lt;" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="10.0">
          <font>
             <Font name="System Bold" size="14.0" />
@@ -93,17 +87,17 @@
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Button>
-      <Separator prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="41.0" />
-      <ComboBox fx:id="sessionPinList" layoutX="783.0" layoutY="8.0" prefWidth="150.0" AnchorPane.rightAnchor="100.0" />
+      <Separator layoutY="85.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="85.0" />
+      <ComboBox fx:id="sessionPinList" layoutX="745.0" layoutY="44.0" prefWidth="150.0" AnchorPane.rightAnchor="105.0" />
       <Label layoutX="721.0" layoutY="565.0" text="Defence Strategy" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="149.0">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="goToField" layoutX="96.0" layoutY="8.0" prefHeight="28.0" prefWidth="55.0" AnchorPane.leftAnchor="96.0" AnchorPane.topAnchor="8.0" />
-      <Button fx:id="goTo" layoutX="157.0" layoutY="8.0" mnemonicParsing="false" text="Go To" AnchorPane.leftAnchor="157.0" AnchorPane.topAnchor="8.0" />
-      <ComboBox fx:id="assessmentCombo" layoutX="384.0" layoutY="9.0" prefHeight="28.0" prefWidth="108.0" visible="false" />
-      <ComboBox fx:id="assessmentResultCombo" layoutX="495.0" layoutY="9.0" prefHeight="28.0" prefWidth="180.0" visible="false" />
+      <TextField fx:id="goToField" layoutX="76.0" layoutY="44.0" prefHeight="28.0" prefWidth="55.0" AnchorPane.leftAnchor="76.0" AnchorPane.topAnchor="44.0" />
+      <Button fx:id="goTo" layoutX="137.0" layoutY="44.0" mnemonicParsing="false" text="Go To" AnchorPane.leftAnchor="137.0" AnchorPane.topAnchor="44.0" />
+      <ComboBox fx:id="assessmentCombo" layoutX="239.0" layoutY="44.0" prefHeight="28.0" prefWidth="108.0" />
+      <ComboBox fx:id="assessmentResultCombo" layoutX="350.0" layoutY="44.0" prefHeight="28.0" prefWidth="180.0" />
       <MenuBar layoutX="3.0" layoutY="-1.0" AnchorPane.topAnchor="8.0">
         <menus>
           <Menu fx:id="menu" mnemonicParsing="false" text="File">

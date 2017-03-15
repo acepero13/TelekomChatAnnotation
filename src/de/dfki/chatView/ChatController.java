@@ -118,7 +118,7 @@ public class ChatController implements Initializable {
                     if(c.getAssesment() == 0)
                     {
                         messagesInConversation = c.getConversation().size();
-                        assesmentList.add(index + "  " + "( " + messagesInConversation + " Message(s) " + ")");
+                        assesmentList.add(index+"");
                         assessmentResultCombo.getItems().clear();
                         assessmentResultCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
                     }
@@ -133,14 +133,14 @@ public class ChatController implements Initializable {
                     if(c.getAssesment() == 1)
                     {
                         messagesInConversation = c.getConversation().size();
-                        assesmentList.add(index + "  " + "( " + messagesInConversation + " Message(s) " + ")");
+                        assesmentList.add(index +"");
                         assessmentResultCombo.getItems().clear();
                         assessmentResultCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
                     }
                     index++;
                 }
             }
-            else if(itemIndes == 1)
+            else if(itemIndes == 2)
             {
                 assessmentResultCombo.getItems().clear();
                 for(Conversation c :conversations)
@@ -148,12 +148,23 @@ public class ChatController implements Initializable {
                     if(c.getAssesment() == 2)
                     {
                         messagesInConversation = c.getConversation().size();
-                        assesmentList.add(index + "  " + "( " + messagesInConversation + " Message(s) " + ")");
+                        assesmentList.add(index +"");
                         assessmentResultCombo.getItems().clear();
                         assessmentResultCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
                     }
                     index++;
                 }
+            }
+        });
+        
+        assessmentResultCombo.setOnAction((event) -> {
+            if (assessmentResultCombo.getValue() != null) {
+                int index =  Integer.parseInt(assessmentResultCombo.getValue().trim());
+                
+                current_position = index-1;
+                sessionList.getSelectionModel().select(current_position);
+                chatGridPane.getChildren().clear();
+                addConversationIntoChatFrame(conversations, current_position);
             }
         });
 
