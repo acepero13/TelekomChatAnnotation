@@ -14,6 +14,7 @@ public class Conversation {
     private boolean pinned = false;
 
     private int defenseStrategy = -1;
+    private int assesment = -1;
 
     public boolean isAnnotated(){
         boolean isAnnotated = true;
@@ -85,5 +86,13 @@ public class Conversation {
 
     public void setPinned(boolean pinned) {
         this.pinned = pinned;
+    }
+
+    public void setOveralAssesment(int assesment) {
+        this.assesment = assesment;
+    }
+
+    public int getAssesment() {
+        return assesment;
     }
 }

@@ -77,8 +77,33 @@ public class TextReader {
                 conversation.setPinned(false);
             }
         }
+        else if(Message.countMatches(text,"#") == 3){
+            int indexDefense = text.indexOf("#");
+            int indexPin = text.indexOf("#", indexDefense + 1);
+            int indexAssesment = text.indexOf("#", indexPin +1);
+            int defenseStrategy = Integer.parseInt(text.substring(indexDefense + 1, indexPin));
+            if(indexAssesment == -1){
+                indexAssesment = text.length();
+            }
+            int pined = Integer.parseInt(text.substring(indexPin + 1, indexAssesment));
+            conversation.setDefenseStrategy(defenseStrategy);
+            if(pined == 1){
+                conversation.setPinned(true);
+            }else {
+                conversation.setPinned(false);
+            }
+
+
+            int assesment = -1;
+            if(indexAssesment != -1){
+                assesment = Integer.parseInt(text.substring(indexAssesment +1));
+
+            }
+            conversation.setOveralAssesment(assesment);
+        }
 
     }
+
 
     public int getNextUnAnnotatedConversation(int current_position){
         int pos = -1;

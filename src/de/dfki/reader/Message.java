@@ -10,11 +10,13 @@ public class Message implements Textable {
     private Speaker speaker;
     private int value;
     private int topic;
+    private int defenseStrategy;
     public Message(int counter, String line) {
         this.counter = counter;
         this.text = line;
         this.topic = -1;
         this.value = -1;
+        this.defenseStrategy = -1;
         parseTopicAndValue();
     }
 
@@ -25,6 +27,15 @@ public class Message implements Textable {
             int indexLast = text.indexOf("|", indexValue + 1);
             topic = Integer.parseInt(text.substring(indexTopic + 1, indexValue));
             value = Integer.parseInt(text.substring(indexValue + 1, indexLast));
+            text = text.substring(0, indexTopic);
+        }else if(countMatches(text, "|") == 4){
+            int indexTopic = text.indexOf("|");
+            int indexValue = text.indexOf("|", indexTopic + 1);
+            int indexDefenseStrategy = text.indexOf("|", indexValue + 1);
+            int indexLast = text.indexOf("|", indexDefenseStrategy + 1);
+            topic = Integer.parseInt(text.substring(indexTopic + 1, indexValue));
+            value = Integer.parseInt(text.substring(indexValue + 1, indexDefenseStrategy));
+            defenseStrategy = Integer.parseInt(text.substring(indexDefenseStrategy +1, indexLast));
             text = text.substring(0, indexTopic);
         }
     }
