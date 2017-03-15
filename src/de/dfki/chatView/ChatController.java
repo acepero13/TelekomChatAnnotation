@@ -164,6 +164,7 @@ public class ChatController implements Initializable {
                 current_position = index-1;
                 sessionList.getSelectionModel().select(current_position);
                 chatGridPane.getChildren().clear();
+                emptyConversationFields();
                 addConversationIntoChatFrame(conversations, current_position);
             }
         });
@@ -171,6 +172,7 @@ public class ChatController implements Initializable {
         sessionList.setOnAction((event) -> {
             current_position = Math.max(sessionList.getSelectionModel().getSelectedIndex(), 0);
             chatGridPane.getChildren().clear();
+            emptyConversationFields();
             addConversationIntoChatFrame(conversations, current_position);
         });
 
@@ -179,6 +181,7 @@ public class ChatController implements Initializable {
                 current_position = pineList.get(sessionPinList.getValue());
                 sessionList.getSelectionModel().select(current_position);
                 chatGridPane.getChildren().clear();
+                emptyConversationFields();
                 addConversationIntoChatFrame(conversations, current_position);
             }
         });
@@ -405,10 +408,12 @@ public class ChatController implements Initializable {
             int a = 0;
         }
 
-        if (!nextCon.isPinned()) {
-            pinButton.setText("Pin");
-        } else {
+        if (nextCon.isPinned()) {                     
             pinButton.setText("UnPin");
+            sessionPinList.setValue(sessionobservableList.get(current_position));               
+            } else {
+            pinButton.setText("Pin");
+            sessionPinList.setValue(null);
         }
 
         if (nextCon.getDefenseStrategy() >= 0) {
