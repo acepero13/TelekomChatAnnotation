@@ -454,12 +454,14 @@ public class ChatController implements Initializable {
         ColumnConstraints agentCol = new ColumnConstraints();
         agentCol.setPercentWidth(10);
         ColumnConstraints c0 = new ColumnConstraints();
-        c0.setPercentWidth(66);
+        c0.setPercentWidth(60);
         ColumnConstraints c1 = new ColumnConstraints();
-        c1.setPercentWidth(12);
+        c1.setPercentWidth(10);
         ColumnConstraints c2 = new ColumnConstraints();
-        c2.setPercentWidth(12);
-        chatGridPane.getColumnConstraints().addAll(agentCol, c0, c1, c2);
+        c2.setPercentWidth(10);
+        ColumnConstraints c3 = new ColumnConstraints();
+        c2.setPercentWidth(10);
+        chatGridPane.getColumnConstraints().addAll(agentCol, c0, c1, c2, c3);
         chatGridPane.setVgap(10);
         chatGridPane.setHgap(2);
         screolPane.setContent(chatGridPane);
