@@ -11,5 +11,7 @@ public interface Textable {
     int getCounter();
     String getText();
     Message.Speaker getSpeaker();
+    int getDefenseStrategy();
+    void setDefenseStrategy(int value);
 
 }

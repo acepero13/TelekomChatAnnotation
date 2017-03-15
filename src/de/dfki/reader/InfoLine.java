@@ -51,4 +51,14 @@ public class InfoLine implements Textable{
     public Message.Speaker getSpeaker() {
         return Message.Speaker.INFO;
     }
+
+    @Override
+    public int getDefenseStrategy() {
+        return 0;
+    }
+
+    @Override
+    public void setDefenseStrategy(int value) {
+
+    }
 }

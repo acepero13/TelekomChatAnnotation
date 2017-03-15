@@ -88,6 +88,15 @@ public class Message implements Textable {
         this.speaker = speaker;
     }
 
+    public int getDefenseStrategy() {
+        return defenseStrategy;
+    }
+
+    @Override
+    public void setDefenseStrategy(int value) {
+        defenseStrategy = value;
+    }
+
     public enum Speaker {
         USER, AGENT, INFO
     }

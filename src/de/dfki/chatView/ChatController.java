@@ -261,7 +261,7 @@ public class ChatController implements Initializable {
                             String message = TextReader.INFO_LINE + " " + t.getText() + "\n";
                             writer.write(message);
                         } else if (t.getSpeaker() == Message.Speaker.USER) {
-                            String message = TextReader.USER_NAME + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + "\n";
+                            String message = TextReader.USER_NAME + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + t.getDefenseStrategy() + "|" +"\n";
                             writer.write(message);
                         } else {
                             String message = c.getSystemName() + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + "\n";
@@ -269,9 +269,9 @@ public class ChatController implements Initializable {
                         }
                     }
                     if (c.isPinned()) {
-                        writer.write("#" + c.getDefenseStrategy() + "#" + 1 + "\n");
+                        writer.write("#" + c.getDefenseStrategy() + "#" + 1 + "#" + c.getAssesment() +"\n");
                     } else {
-                        writer.write("#" + c.getDefenseStrategy() + "#" + 0 + "\n");
+                        writer.write("#" + c.getDefenseStrategy() + "#" + 0 + "#" + c.getAssesment() + "\n");
                     }
                 }
                 writer.close();
@@ -513,6 +513,8 @@ public class ChatController implements Initializable {
                 userValue.setText("" + c.getConversation().get(messagePositionWithoutInfo).getValue());
             }
 
+
+
             userValue.setId("userValue" + i);
 
             Pane p1 = new Pane();
@@ -565,6 +567,19 @@ public class ChatController implements Initializable {
                     c.getConversation().get(messagePositionWithoutInfo).setValue(Integer.parseInt(newValue));
                 }
             });
+
+            defenceStrategy.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (messagePositionWithoutInfo >= 0) {
+                    c.getConversation().get(messagePositionWithoutInfo).setDefenseStrategy(Integer.parseInt(newValue));
+                }
+            });
+
+            if (messagePositionWithoutInfo >= 0 && c.getConversation().get(messagePositionWithoutInfo).getDefenseStrategy() != -1) {
+
+                defenceStrategy.setText("" + c.getConversation().get(messagePositionWithoutInfo).getDefenseStrategy());
+            }
+
+
         }
     }
 
