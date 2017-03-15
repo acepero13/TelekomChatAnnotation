@@ -219,9 +219,7 @@ public class ChatController implements Initializable {
                 if (next != -1 && next < conversations.size()) {
                     current_position = next;
                     sessionList.getSelectionModel().select(current_position);
-                    if (conversations.get(current_position).getDefenseStrategy() == -1) {
-                        strategyField.setText("");
-                    }
+                    emptyConversationFields();
                     addConversationIntoChatFrame(conversations, current_position);
                 }
             }
@@ -233,9 +231,7 @@ public class ChatController implements Initializable {
                 if (prev != -1 && prev >= 0) {
                     current_position = prev;
                     sessionList.getSelectionModel().select(current_position);
-                    if (conversations.get(current_position).getDefenseStrategy() == -1) {
-                        strategyField.setText("");
-                    }
+                    emptyConversationFields();
                     addConversationIntoChatFrame(conversations, current_position);
                 }
             }
