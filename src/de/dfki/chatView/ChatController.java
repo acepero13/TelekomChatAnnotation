@@ -263,10 +263,10 @@ public class ChatController implements Initializable {
         });
 
         assessmentTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-                
-                    if (isNumeric(newValue)) {
-                        
-                    }
+            Conversation con = conversations.get(current_position);
+                if (isNumeric(newValue) && !newValue.isEmpty()) {
+                    con.setOveralAssesment(Integer.parseInt(newValue));
+                }
                 
             });
 
@@ -382,6 +382,9 @@ public class ChatController implements Initializable {
         if (con.getDefenseStrategy() >= 0) {
             strategyField.setText("" + con.getDefenseStrategy());
         }
+        if(con.getAssesment() >= 0){
+            assessmentTextField.setText("" + con.getAssesment());
+        }
         LinkedList<Textable> messages = con.getConversation();
         addConversationDialog(messageCounter, messages);
     }
@@ -403,6 +406,10 @@ public class ChatController implements Initializable {
 
         if (nextCon.getDefenseStrategy() >= 0) {
             strategyField.setText("" + nextCon.getDefenseStrategy());
+        }
+
+        if (nextCon.getAssesment() >= 0) {
+            assessmentTextField.setText("" + nextCon.getAssesment());
         }
 
         LinkedList<Textable> messages = nextCon.getConversation();
@@ -493,9 +500,7 @@ public class ChatController implements Initializable {
             nextButton.setDisable(true);
         }
 
-        if (conversations.get(current_position).getDefenseStrategy() == -1) {
-            strategyField.setText("");
-        }
+        emptyConversationFields();
         addConversationIntoChatFrame(conversations, current_position);
 
     }
@@ -509,12 +514,19 @@ public class ChatController implements Initializable {
                 previousButton.setDisable(true);
             }
 
-            if (conversations.get(current_position).getDefenseStrategy() == -1) {
-                strategyField.setText("");
-            }
+            emptyConversationFields();
             addConversationIntoChatFrame(conversations, current_position);
         } else {
             previousButton.setDisable(true);
+        }
+    }
+
+    private void emptyConversationFields() {
+        if (conversations.get(current_position).getDefenseStrategy() == -1) {
+            strategyField.setText("");
+        }
+        if (conversations.get(current_position).getAssesment() == -1) {
+            assessmentTextField.setText("");
         }
     }
 

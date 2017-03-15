@@ -31,6 +31,9 @@ public class TextReader {
         ) {
             while ((line = br.readLine()) != null) {
                 if(isNewConversation(line, "------")){
+                    if(conversation!=null && counter == 0){//old conversation. No messages
+                        conversation.setOveralAssesment(0);
+                    }
                     counter = 0;
                     conversation = new Conversation();
                     conversations.add(conversation);
@@ -54,7 +57,6 @@ public class TextReader {
                     counter++;
                 } else if(line.startsWith("#")){
                     parseDefenseAndPin(conversation, line);
-
                 }
             }
         } catch (IOException e) {
