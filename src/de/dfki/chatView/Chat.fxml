@@ -111,5 +111,6 @@
       </MenuBar>
       <Label layoutX="436.0" layoutY="563.0" prefHeight="27.0" prefWidth="128.0" text="Overall Assessment" />
       <TextField fx:id="assessmentTextField" layoutX="572.0" layoutY="563.0" prefHeight="27.0" prefWidth="82.0" />
+      <Separator layoutX="-14.0" layoutY="37.0" prefHeight="3.0" prefWidth="1011.0" AnchorPane.leftAnchor="-14.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="37.0" />
    </children>
 </AnchorPane>
