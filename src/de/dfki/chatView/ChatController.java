@@ -117,7 +117,7 @@ public class ChatController implements Initializable {
                 addConversationIntoChatFrame(conversations, current_position);
             }
         });
-
+        System.out.println(fileOpenItem);
         fileOpenItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -306,7 +306,7 @@ public class ChatController implements Initializable {
             }
         }
 
-        saveFile.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN), new Runnable() {
+        goTo.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN), new Runnable() {
             @Override
             public void run() {
                 genericSave();
