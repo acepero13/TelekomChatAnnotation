@@ -102,6 +102,58 @@ public class ChatController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        assessmentCombo.setOnAction((event) -> {
+            int itemIndes = assessmentCombo.getSelectionModel().getSelectedIndex();
+            List assesmentList = new ArrayList();
+            int index = 1;
+            int messagesInConversation = 0;
+            if(itemIndes == 0)
+            {
+                assessmentResultCombo.getItems().clear();
+                for(Conversation c :conversations)
+                {
+                    if(c.getAssesment() == 0)
+                    {
+                        messagesInConversation = c.getConversation().size();
+                        assesmentList.add(index + "  " + "( " + messagesInConversation + " Message(s) " + ")");
+                        assessmentResultCombo.getItems().clear();
+                        assessmentResultCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
+                    }
+                    index++;
+                }
+            }
+            else if(itemIndes == 1)
+            {
+                assessmentResultCombo.getItems().clear();
+                for(Conversation c :conversations)
+                {
+                    if(c.getAssesment() == 1)
+                    {
+                        messagesInConversation = c.getConversation().size();
+                        assesmentList.add(index + "  " + "( " + messagesInConversation + " Message(s) " + ")");
+                        assessmentResultCombo.getItems().clear();
+                        assessmentResultCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
+                    }
+                    index++;
+                }
+            }
+            else if(itemIndes == 1)
+            {
+                assessmentResultCombo.getItems().clear();
+                for(Conversation c :conversations)
+                {
+                    if(c.getAssesment() == 2)
+                    {
+                        messagesInConversation = c.getConversation().size();
+                        assesmentList.add(index + "  " + "( " + messagesInConversation + " Message(s) " + ")");
+                        assessmentResultCombo.getItems().clear();
+                        assessmentResultCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
+                    }
+                    index++;
+                }
+            }
+        });
 
         sessionList.setOnAction((event) -> {
             current_position = Math.max(sessionList.getSelectionModel().getSelectedIndex(), 0);
@@ -117,7 +169,7 @@ public class ChatController implements Initializable {
                 addConversationIntoChatFrame(conversations, current_position);
             }
         });
-        System.out.println(fileOpenItem);
+        
         fileOpenItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -244,6 +296,7 @@ public class ChatController implements Initializable {
         } catch (NumberFormatException e) {
 
         }
+        
 
     }
 
