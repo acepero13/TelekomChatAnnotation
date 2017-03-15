@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -20,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="600.0" prefWidth="1000.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.dfki.chatView.ChatController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="600.0" prefWidth="1000.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.dfki.chatView.ChatController">
     <stylesheets>
         <URL value="@chat.css" />
     </stylesheets>
@@ -92,6 +86,6 @@
       </Label>
       <TextField fx:id="goToField" layoutX="498.0" layoutY="569.0" prefHeight="28.0" prefWidth="126.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="420.0" />
       <Button fx:id="goTo" layoutX="631.0" layoutY="551.0" mnemonicParsing="false" text="Go To" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="360.0" />
-      <Button fx:id="saveFile" disable="true" layoutX="119.0" layoutY="8.0" mnemonicParsing="false" text="Save" visible="false" />
+      <Button fx:id="saveFile" layoutX="119.0" layoutY="8.0" mnemonicParsing="false" text="Save" />
    </children>
 </AnchorPane>

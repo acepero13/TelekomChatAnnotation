@@ -85,6 +85,7 @@ public class ChatController implements Initializable {
     HashMap<String, String> annotation = new HashMap<>();
     private HashMap<String, Integer> pineList = new HashMap<>();
     private File file;
+    String filename = "";
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -209,7 +210,7 @@ public class ChatController implements Initializable {
 
     private void saveAsAction() {
         FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TCA files (*.tca)", "*.tca");
         fileChooser.getExtensionFilters().add(extFilter);
         file = fileChooser.showSaveDialog(telecomChat.getPrimaryStage());
         handleSave();
@@ -272,18 +273,23 @@ public class ChatController implements Initializable {
         FileChooser fileChooser = new FileChooser();
 
         // Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
-        fileChooser.getExtensionFilters().add(extFilter);
+        FileChooser.ExtensionFilter txtFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+        FileChooser.ExtensionFilter tcaFilter = new FileChooser.ExtensionFilter("TCA files (*.tca)", "*.tca");
+        fileChooser.getExtensionFilters().add(txtFilter);
+        fileChooser.getExtensionFilters().add(tcaFilter);
 
         // Show open file dialog
         File file = fileChooser.showOpenDialog(telecomChat.getPrimaryStage());
         if (file != null) {
-            String filename = file.getAbsolutePath();
+            filename = file.getAbsolutePath();
             reader = new TextReader(filename);
             reader.read();
             conversations = reader.getConversations();
             addFirstConversationIntoChatFrame(conversations);
             fillCombobox(conversations);
+            if(filename.contains(".tca")){
+                this.file = file;
+            }
         }
     }
 
