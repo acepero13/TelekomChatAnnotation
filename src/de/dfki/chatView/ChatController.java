@@ -251,7 +251,9 @@ public class ChatController implements Initializable {
         strategyField.textProperty().addListener((observable, oldValue, newValue) -> {
             Conversation con = conversations.get(current_position);
             if (!newValue.isEmpty()) {
-                con.setDefenseStrategy(Integer.parseInt(newValue));
+                if (isNumeric(newValue)) {
+                    con.setDefenseStrategy(Integer.parseInt(newValue));
+                }
             }
         });
 
