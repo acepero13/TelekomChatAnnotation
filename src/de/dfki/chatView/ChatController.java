@@ -19,6 +19,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -75,6 +76,12 @@ public class ChatController implements Initializable {
     private ComboBox<String> assessmentCombo;
     @FXML
     private ComboBox<String> assessmentResultCombo;
+    @FXML
+    private MenuItem fileOpenItem;
+    @FXML
+    private MenuItem fileSaveItem;
+    @FXML
+    private MenuItem fileSaveAs;
 
     private int current_position = 0;
 
@@ -111,7 +118,7 @@ public class ChatController implements Initializable {
             }
         });
 
-        openFileButton.setOnAction(new EventHandler<ActionEvent>() {
+        fileOpenItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 handleOpen();
@@ -144,11 +151,11 @@ public class ChatController implements Initializable {
             }
         });
 
-        saveAs.setOnAction((event) -> {
+        fileSaveAs.setOnAction((event) -> {
             saveAsAction();
         });
 
-        saveFile.setOnAction(event -> {
+        fileSaveItem.setOnAction(event -> {
             genericSave();
         });
 
