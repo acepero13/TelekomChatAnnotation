@@ -5,6 +5,7 @@ import de.dfki.reader.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javafx.collections.FXCollections;
@@ -84,6 +85,8 @@ public class ChatController implements Initializable {
     private MenuItem fileSaveItem;
     @FXML
     private MenuItem fileSaveAs;
+    @FXML
+    private Button exportButton;
 
     private int current_position = 0;
 
@@ -104,51 +107,40 @@ public class ChatController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         assessmentCombo.setOnAction((event) -> {
             int itemIndes = assessmentCombo.getSelectionModel().getSelectedIndex();
             List assesmentList = new ArrayList();
             int index = 1;
             int messagesInConversation = 0;
-            if(itemIndes == 0)
-            {
+            if (itemIndes == 0) {
                 assessmentResultCombo.getItems().clear();
-                for(Conversation c :conversations)
-                {
-                    if(c.getAssesment() == 0)
-                    {
+                for (Conversation c : conversations) {
+                    if (c.getAssesment() == 0) {
                         messagesInConversation = c.getConversation().size();
-                        assesmentList.add(index+"");
+                        assesmentList.add(index + "");
                         assessmentResultCombo.getItems().clear();
                         assessmentResultCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
                     }
                     index++;
                 }
-            }
-            else if(itemIndes == 1)
-            {
+            } else if (itemIndes == 1) {
                 assessmentResultCombo.getItems().clear();
-                for(Conversation c :conversations)
-                {
-                    if(c.getAssesment() == 1)
-                    {
+                for (Conversation c : conversations) {
+                    if (c.getAssesment() == 1) {
                         messagesInConversation = c.getConversation().size();
-                        assesmentList.add(index +"");
+                        assesmentList.add(index + "");
                         assessmentResultCombo.getItems().clear();
                         assessmentResultCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
                     }
                     index++;
                 }
-            }
-            else if(itemIndes == 2)
-            {
+            } else if (itemIndes == 2) {
                 assessmentResultCombo.getItems().clear();
-                for(Conversation c :conversations)
-                {
-                    if(c.getAssesment() == 2)
-                    {
+                for (Conversation c : conversations) {
+                    if (c.getAssesment() == 2) {
                         messagesInConversation = c.getConversation().size();
-                        assesmentList.add(index +"");
+                        assesmentList.add(index + "");
                         assessmentResultCombo.getItems().clear();
                         assessmentResultCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
                     }
@@ -156,12 +148,12 @@ public class ChatController implements Initializable {
                 }
             }
         });
-        
+
         assessmentResultCombo.setOnAction((event) -> {
             if (assessmentResultCombo.getValue() != null) {
-                int index =  Integer.parseInt(assessmentResultCombo.getValue().trim());
-                
-                current_position = index-1;
+                int index = Integer.parseInt(assessmentResultCombo.getValue().trim());
+
+                current_position = index - 1;
                 sessionList.getSelectionModel().select(current_position);
                 chatGridPane.getChildren().clear();
                 emptyConversationFields();
@@ -185,7 +177,7 @@ public class ChatController implements Initializable {
                 addConversationIntoChatFrame(conversations, current_position);
             }
         });
-        
+
         fileOpenItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -274,15 +266,52 @@ public class ChatController implements Initializable {
 
         assessmentTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             Conversation con = conversations.get(current_position);
-                if (isNumeric(newValue) && !newValue.isEmpty()) {
-                    con.setOveralAssesment(Integer.parseInt(newValue));
-                }
-                
-            });
+            if (isNumeric(newValue) && !newValue.isEmpty()) {
+                con.setOveralAssesment(Integer.parseInt(newValue));
+            }
+
+        });
+
+        exportButton.setOnAction((event) -> {
+            handleExportButton();
+        });
 
         fillAssessmentCombo();
         showChatOverview();
 
+    }
+
+    private void handleExportButton() {
+        String selectedItem = "";
+        String timeStamp = new SimpleDateFormat("HH.mm.ss").format(new java.util.Date());
+        String filename = "";
+        
+        if (assessmentCombo.getValue() != null) {
+            selectedItem = assessmentCombo.getValue();
+            if (selectedItem.equals("Empty")) {
+                filename = "Empty-" + timeStamp;
+                FileChooser fileChooser = new FileChooser();
+                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TCA files (*.tca)", "*.tca");
+                fileChooser.getExtensionFilters().add(extFilter);
+                fileChooser.setInitialFileName(filename);
+                file = fileChooser.showSaveDialog(telecomChat.getPrimaryStage());
+            } else if (selectedItem.equals("Conspicuous")) {
+                filename = "Conspicuous-" + timeStamp;
+                FileChooser fileChooser = new FileChooser();
+                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TCA files (*.tca)", "*.tca");
+                fileChooser.getExtensionFilters().add(extFilter);
+                fileChooser.setInitialFileName(filename);
+                file = fileChooser.showSaveDialog(telecomChat.getPrimaryStage());
+            }else if(selectedItem.equals("Not Conspicuous")){
+                filename = "Not Conspicuous-" + timeStamp;
+                FileChooser fileChooser = new FileChooser();
+                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TCA files (*.tca)", "*.tca");
+                fileChooser.getExtensionFilters().add(extFilter);
+                fileChooser.setInitialFileName(filename);
+                file = fileChooser.showSaveDialog(telecomChat.getPrimaryStage());
+            }
+            exportFile();
+        }
     }
 
     private void genericSave() {
@@ -316,7 +345,40 @@ public class ChatController implements Initializable {
         } catch (NumberFormatException e) {
 
         }
-        
+
+    }
+
+    private void exportFile() {
+        try {
+            if (file != null) {
+                Writer writer = new Writer(file);
+                for (String item : assessmentResultCombo.getItems()) {
+                    int itemIndex = Integer.parseInt(item) - 1;
+                    Conversation c = conversations.get(itemIndex);
+                    writer.write("--------------------------\n");
+                    for (Textable t : c.getConversation()) {
+                        if (t.getSpeaker() == Message.Speaker.INFO) {
+                            String message = TextReader.INFO_LINE + " " + t.getText() + "\n";
+                            writer.write(message);
+                        } else if (t.getSpeaker() == Message.Speaker.USER) {
+                            String message = TextReader.USER_NAME + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + t.getDefenseStrategy() + "|" + "\n";
+                            writer.write(message);
+                        } else {
+                            String message = c.getSystemName() + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + "\n";
+                            writer.write(message);
+                        }
+                    }
+                    if (c.isPinned()) {
+                        writer.write("#" + c.getDefenseStrategy() + "#" + 1 + "#" + c.getAssesment() + "\n");
+                    } else {
+                        writer.write("#" + c.getDefenseStrategy() + "#" + 0 + "#" + c.getAssesment() + "\n");
+                    }
+                }
+                writer.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -392,7 +454,7 @@ public class ChatController implements Initializable {
         if (con.getDefenseStrategy() >= 0) {
             strategyField.setText("" + con.getDefenseStrategy());
         }
-        if(con.getAssesment() >= 0){
+        if (con.getAssesment() >= 0) {
             assessmentTextField.setText("" + con.getAssesment());
         }
         LinkedList<Textable> messages = con.getConversation();
@@ -408,10 +470,10 @@ public class ChatController implements Initializable {
             int a = 0;
         }
 
-        if (nextCon.isPinned()) {                     
+        if (nextCon.isPinned()) {
             pinButton.setText("UnPin");
-            sessionPinList.setValue(sessionobservableList.get(current_position));               
-            } else {
+            sessionPinList.setValue(sessionobservableList.get(current_position));
+        } else {
             pinButton.setText("Pin");
             sessionPinList.setValue(null);
         }
