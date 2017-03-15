@@ -94,7 +94,7 @@
           <Menu fx:id="menu" mnemonicParsing="false" text="File">
             <items>
               <MenuItem fx:id="fileOpenItem" mnemonicParsing="false" text="Open" />
-                  <MenuItem fx:id="fileSaveItem" mnemonicParsing="false" text="Save" />
+                  <MenuItem fx:id="fileSaveItem" mnemonicParsing="false" text="Save Ctrl+S" />
                   <MenuItem fx:id="fileSaveAs" mnemonicParsing="false" text="Save As" />
             </items>
           </Menu>
