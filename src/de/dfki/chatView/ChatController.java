@@ -528,6 +528,19 @@ public class ChatController implements Initializable {
             chatGridPane.add(chatMessage, 1, i);
             chatGridPane.add(p1, 2, i);
             chatGridPane.add(p2, 3, i);
+            
+            ///////////////////////////////////////////////////////////////////////////////////////
+            TextField defenceStrategy = new TextField();
+            defenceStrategy.setPrefWidth(100);
+            defenceStrategy.setPadding(new Insets(8, 0, 8, 0));
+            defenceStrategy.setId("defenceStrategy" + i);
+            Pane p4 = new Pane();
+            p4.setStyle("-fx-background-color: #EFFFFF; -fx-alignment: left;");
+
+            p4.getChildren().add(defenceStrategy);
+            p4.setPadding(new Insets(0, 10, 0, 50));
+
+            chatGridPane.add(p4, 4, i);
 
             userTopic.textProperty().addListener((observable, oldValue, newValue) -> {
                 String message = "Sie: " + dialog + "|" + userTopic.getText() + "|" + userValue.getText();
@@ -603,6 +616,13 @@ public class ChatController implements Initializable {
             chatGridPane.add(chatMessage, 1, i);
             chatGridPane.add(p1, 2, i);
             chatGridPane.add(p2, 3, i);
+            
+            Pane p4 = new Pane();
+            p4.setStyle("-fx-background-color: cornsilk; -fx-alignment: left;");
+
+            p4.setPadding(new Insets(0, 10, 0, 50));
+
+            chatGridPane.add(p4, 4, i);
 
             systemTopic.textProperty().addListener((observable, oldValue, newValue) -> {
                 String message = "{Name}: " + dialog + "|" + systemTopic.getText() + "|" + systemValue.getText();
