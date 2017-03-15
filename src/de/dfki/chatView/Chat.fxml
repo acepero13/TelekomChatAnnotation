@@ -95,7 +95,7 @@
          </font></Button>
       <Separator layoutY="85.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="85.0" />
       <ComboBox fx:id="sessionPinList" layoutX="745.0" layoutY="44.0" prefWidth="150.0" AnchorPane.rightAnchor="105.0" AnchorPane.topAnchor="44.0" />
-      <Label layoutX="721.0" layoutY="565.0" text="Defence Strategy" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="149.0">
+      <Label layoutX="738.0" layoutY="568.0" text="Defence Strategy" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="146.0">
          <font>
             <Font size="14.0" />
          </font>
@@ -115,8 +115,8 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Label layoutX="436.0" layoutY="563.0" prefHeight="27.0" prefWidth="128.0" text="Overall Assessment" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="436.0" />
-      <TextField fx:id="assessmentTextField" layoutX="572.0" layoutY="563.0" prefHeight="27.0" prefWidth="82.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="572.0" />
+      <Label layoutX="482.0" layoutY="563.0" prefHeight="27.0" prefWidth="128.0" text="Overall Assessment" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="390.0" />
+      <TextField fx:id="assessmentTextField" layoutX="616.0" layoutY="563.0" prefHeight="27.0" prefWidth="82.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="302.0" />
       <Separator layoutX="-14.0" layoutY="37.0" prefHeight="3.0" prefWidth="1011.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="37.0" />
    </children>
 </AnchorPane>
