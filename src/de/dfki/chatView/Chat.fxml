@@ -116,6 +116,6 @@
         </menus>
       </MenuBar>
       <Label layoutX="436.0" layoutY="563.0" prefHeight="27.0" prefWidth="128.0" text="Overall Assessment" />
-      <TextField layoutX="572.0" layoutY="563.0" prefHeight="27.0" prefWidth="82.0" />
+      <TextField fx:id="assessmentTextField" layoutX="572.0" layoutY="563.0" prefHeight="27.0" prefWidth="82.0" />
    </children>
 </AnchorPane>

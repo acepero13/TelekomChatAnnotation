@@ -75,6 +75,8 @@ public class ChatController implements Initializable {
     @FXML
     private ComboBox<String> assessmentCombo;
     @FXML
+    private TextField assessmentTextField;
+    @FXML
     private ComboBox<String> assessmentResultCombo;
     @FXML
     private MenuItem fileOpenItem;
@@ -259,6 +261,14 @@ public class ChatController implements Initializable {
                 }
             }
         });
+
+        assessmentTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+                
+                    if (isNumeric(newValue)) {
+                        
+                    }
+                
+            });
 
         fillAssessmentCombo();
         showChatOverview();
