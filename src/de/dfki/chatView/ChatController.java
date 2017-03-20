@@ -429,6 +429,7 @@ public class ChatController implements Initializable {
         File file = fileChooser.showOpenDialog(telecomChat.getPrimaryStage());
         if (file != null) {
             filename = file.getAbsolutePath();
+            telecomChat.getPrimaryStage().setTitle(file.getName());
             reader = new TextReader(filename);
             reader.read();
             conversations = reader.getConversations();
