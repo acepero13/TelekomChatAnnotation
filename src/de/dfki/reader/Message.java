@@ -33,7 +33,12 @@ public class Message implements Textable {
             int indexValue = text.indexOf("|", indexTopic + 1);
             int indexDefenseStrategy = text.indexOf("|", indexValue + 1);
             int indexLast = text.indexOf("|", indexDefenseStrategy + 1);
-            topic = Integer.parseInt(text.substring(indexTopic + 1, indexValue));
+            try{
+                topic = Integer.parseInt(text.substring(indexTopic + 1, indexValue));
+            }catch (NumberFormatException e){
+                int a = 0; // Nix
+            }
+
             value = Integer.parseInt(text.substring(indexValue + 1, indexDefenseStrategy));
             defenseStrategy = Integer.parseInt(text.substring(indexDefenseStrategy +1, indexLast));
             text = text.substring(0, indexTopic);
