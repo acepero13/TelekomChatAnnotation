@@ -1,28 +1,26 @@
 package de.dfki.chatView;
 
-import de.dfki.reader.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
+import de.dfki.chatView.renderers.InfoRenderer;
+import de.dfki.chatView.renderers.SystemRenderer;
+import de.dfki.chatView.renderers.UserRenderer;
+import de.dfki.eliza.chat.ChatManager;
+import de.dfki.eliza.chat.decorators.ChatManagerDecorator;
+import de.dfki.eliza.chat.decorators.UnAnnotatedConversationDecorator;
+import de.dfki.eliza.chat.decorators.factories.ChatManagerAbstractFactory;
+import de.dfki.eliza.files.exceptions.NoValidConversation;
+import de.dfki.eliza.files.filestystem.FileSystemReadable;
+import de.dfki.eliza.files.filestystem.eliza.ElizaFileSystem;
+import de.dfki.eliza.files.filestystem.eliza.ElizaWriter;
+import de.dfki.eliza.files.models.Conversation;
+import de.dfki.eliza.files.readers.eliza.ElizaReader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -30,8 +28,13 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * FXML Controller class
@@ -40,6 +43,10 @@ import javafx.stage.FileChooser;
  */
 public class ChatController implements Initializable {
 
+    ElizaReader reader;
+    ChatManager chatManager;
+    UnAnnotatedConversationDecorator unAnnotatedManager;
+    String filename = "";
     /**
      * Initializes the controller class.
      */
@@ -87,64 +94,35 @@ public class ChatController implements Initializable {
     private MenuItem fileSaveAs;
     @FXML
     private Button exportButton;
-
     private int current_position = 0;
-
     private GridPane chatGridPane;
-
     private TelekomChat telecomChat;
-
     private ObservableList<String> sessionobservableList;
-
-    TextReader reader;
-
-    LinkedList<Conversation> conversations;
-
-    HashMap<String, String> annotation = new HashMap<>();
+    private Conversation conversation;
     private HashMap<String, Integer> pineList = new HashMap<>();
     private File file;
-    String filename = "";
+
+    public static boolean isNumeric(String str) {
+        return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         assessmentCombo.setOnAction((event) -> {
-            int itemIndes = assessmentCombo.getSelectionModel().getSelectedIndex();
+            int itemIndex = assessmentCombo.getSelectionModel().getSelectedIndex();
             List assesmentList = new ArrayList();
-            int index = 1;
-            int messagesInConversation = 0;
-            if (itemIndes == 0) {
-                assessmentResultCombo.getItems().clear();
-                for (Conversation c : conversations) {
-                    if (c.getAssesment() == 0) {
-                        messagesInConversation = c.getConversation().size();
-                        assesmentList.add(index + "");
-                        assessmentResultCombo.getItems().clear();
-                        assessmentResultCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
-                    }
-                    index++;
-                }
-            } else if (itemIndes == 1) {
-                assessmentResultCombo.getItems().clear();
-                for (Conversation c : conversations) {
-                    if (c.getAssesment() == 1) {
-                        messagesInConversation = c.getConversation().size();
-                        assesmentList.add(index + "");
-                        assessmentResultCombo.getItems().clear();
-                        assessmentResultCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
-                    }
-                    index++;
-                }
-            } else if (itemIndes == 2) {
-                assessmentResultCombo.getItems().clear();
-                for (Conversation c : conversations) {
-                    if (c.getAssesment() == 2) {
-                        messagesInConversation = c.getConversation().size();
-                        assesmentList.add(index + "");
-                        assessmentResultCombo.getItems().clear();
-                        assessmentResultCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
-                    }
-                    index++;
+            assessmentResultCombo.getItems().clear();
+            ChatManagerDecorator decoratedChatManager = createAssessmentDecorator(itemIndex);
+            boolean hasNext = true;
+            while (hasNext) {
+                try {
+                    decoratedChatManager.getNextConversation();
+                    assesmentList.add(decoratedChatManager.getCurrentPosition() + 1 + "");
+                    assessmentResultCombo.getItems().clear();
+                    assessmentResultCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
+                } catch (NoValidConversation noValidConversation) {
+                    hasNext = false;
                 }
             }
         });
@@ -157,7 +135,7 @@ public class ChatController implements Initializable {
                 sessionList.getSelectionModel().select(current_position);
                 chatGridPane.getChildren().clear();
                 emptyConversationFields();
-                addConversationIntoChatFrame(conversations, current_position);
+                addConversationIntoChatFrame();
             }
         });
 
@@ -165,16 +143,22 @@ public class ChatController implements Initializable {
             current_position = Math.max(sessionList.getSelectionModel().getSelectedIndex(), 0);
             chatGridPane.getChildren().clear();
             emptyConversationFields();
-            addConversationIntoChatFrame(conversations, current_position);
+            addConversationIntoChatFrame();
         });
 
         sessionPinList.setOnAction((event) -> {
             if (sessionPinList.getValue() != null) {
-                current_position = pineList.get(sessionPinList.getValue());
-                sessionList.getSelectionModel().select(current_position);
+                int position = pineList.get(sessionPinList.getValue());
+                sessionList.getSelectionModel().select(position);
                 chatGridPane.getChildren().clear();
                 emptyConversationFields();
-                addConversationIntoChatFrame(conversations, current_position);
+                addConversationIntoChatFrame();
+                try {
+                    chatManager.goToConversation(position);
+                } catch (NoValidConversation noValidConversation) {
+                    noValidConversation.printStackTrace();
+                }
+
             }
         });
 
@@ -188,10 +172,10 @@ public class ChatController implements Initializable {
         pinButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (conversations != null) {
-                    Conversation conver = conversations.get(current_position);
-                    if (!conver.isPinned()) {
-                        conver.setPinned(true);
+                if (conversation != null) {
+
+                    if (!conversation.isPinned()) {
+                        conversation.setPinned(true);
                         pinButton.setText("UnPin");
                         if (!pineList.containsKey(sessionobservableList.get(current_position))) {
                             pineList.put(sessionobservableList.get(current_position), current_position);
@@ -199,7 +183,7 @@ public class ChatController implements Initializable {
                             sessionPinList.setValue(sessionobservableList.get(current_position));
                         }
                     } else {
-                        conver.setPinned(false);
+                        conversation.setPinned(false);
                         pinButton.setText("Pin");
                         if (pineList.containsKey(sessionobservableList.get(current_position))) {
                             pineList.remove(sessionobservableList.get(current_position), current_position);
@@ -220,33 +204,27 @@ public class ChatController implements Initializable {
         });
 
         nextAnot.setOnAction((event) -> {
-            if (conversations != null) {
-                int next = reader.getNextUnAnnotatedConversation(current_position);
-                if (next != -1 && next < conversations.size()) {
-                    current_position = next;
-                    sessionList.getSelectionModel().select(current_position);
-                    emptyConversationFields();
-                    addConversationIntoChatFrame(conversations, current_position);
-                }
+            try {
+                conversation = unAnnotatedManager.getNextConversation();
+                updateValues();
+            } catch (NoValidConversation noValidConversation) {
+                noValidConversation.printStackTrace();
             }
         });
 
         prevAnot.setOnAction((event) -> {
-            if (conversations != null) {
-                int prev = reader.getPreviousUnAnnotatedConversation(current_position);
-                if (prev != -1 && prev >= 0) {
-                    current_position = prev;
-                    sessionList.getSelectionModel().select(current_position);
-                    emptyConversationFields();
-                    addConversationIntoChatFrame(conversations, current_position);
-                }
+            try {
+                conversation = unAnnotatedManager.getPreviousConversation();
+                updateValues();
+            } catch (NoValidConversation noValidConversation) {
+                noValidConversation.printStackTrace();
             }
+
         });
 
         strategyField.textProperty().addListener((observable, oldValue, newValue) -> {
-            Conversation con = conversations.get(current_position);
             if (!newValue.isEmpty()) {
-                con.setDefenseStrategy(Integer.parseInt(newValue));
+                conversation.setDefenseStrategy(Integer.parseInt(newValue));
             }
         });
 
@@ -265,9 +243,8 @@ public class ChatController implements Initializable {
         });
 
         assessmentTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            Conversation con = conversations.get(current_position);
             if (isNumeric(newValue) && !newValue.isEmpty()) {
-                con.setOveralAssesment(Integer.parseInt(newValue));
+                conversation.setOveralAssesment(Integer.parseInt(newValue));
             }
 
         });
@@ -281,37 +258,40 @@ public class ChatController implements Initializable {
 
     }
 
+    private ChatManagerDecorator createAssessmentDecorator(int itemIndex) {
+        return ChatManagerAbstractFactory.createChatManager(itemIndex, chatManager);
+    }
+
     private void handleExportButton() {
         String selectedItem = "";
         String timeStamp = new SimpleDateFormat("HH.mm.ss").format(new java.util.Date());
         String filename = "";
-        
+        int itemIndex = assessmentCombo.getSelectionModel().getSelectedIndex();
+        File fileExport = null;
         if (assessmentCombo.getValue() != null) {
             selectedItem = assessmentCombo.getValue();
             if (selectedItem.equals("Empty")) {
                 filename = "Empty-" + timeStamp;
-                FileChooser fileChooser = new FileChooser();
-                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TCA files (*.tca)", "*.tca");
-                fileChooser.getExtensionFilters().add(extFilter);
-                fileChooser.setInitialFileName(filename);
-                file = fileChooser.showSaveDialog(telecomChat.getPrimaryStage());
+                fileExport = openExportFileChooser(filename);
             } else if (selectedItem.equals("Conspicuous")) {
                 filename = "Conspicuous-" + timeStamp;
-                FileChooser fileChooser = new FileChooser();
-                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TCA files (*.tca)", "*.tca");
-                fileChooser.getExtensionFilters().add(extFilter);
-                fileChooser.setInitialFileName(filename);
-                file = fileChooser.showSaveDialog(telecomChat.getPrimaryStage());
-            }else if(selectedItem.equals("Not Conspicuous")){
+                fileExport = openExportFileChooser(filename);
+            } else if (selectedItem.equals("Not Conspicuous")) {
                 filename = "Not Conspicuous-" + timeStamp;
-                FileChooser fileChooser = new FileChooser();
-                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TCA files (*.tca)", "*.tca");
-                fileChooser.getExtensionFilters().add(extFilter);
-                fileChooser.setInitialFileName(filename);
-                file = fileChooser.showSaveDialog(telecomChat.getPrimaryStage());
+                fileExport = openExportFileChooser(filename);
             }
-            exportFile();
+            if (fileExport != null)
+                exportFile(itemIndex, fileExport);
         }
+    }
+
+    private File openExportFileChooser(String filename) {
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TCA files (*.tca)", "*.tca");
+        fileChooser.getExtensionFilters().add(extFilter);
+        fileChooser.setInitialFileName(filename);
+        File fileExport = fileChooser.showSaveDialog(telecomChat.getPrimaryStage());
+        return fileExport;
     }
 
     private void genericSave() {
@@ -335,84 +315,51 @@ public class ChatController implements Initializable {
         if (value.equals("")) {
             return;
         }
-
-        try {
-            int conversationNumber = Integer.valueOf(value) - 1;
-            if (conversationNumber >= 0 && conversationNumber < conversations.size()) {
-                current_position = conversationNumber;
-                moveToConversation();
-            }
-        } catch (NumberFormatException e) {
-
-        }
+        moveTo(value);
 
     }
 
-    private void exportFile() {
+    private void moveTo(String value) {
         try {
-            if (file != null) {
-                Writer writer = new Writer(file);
-                for (String item : assessmentResultCombo.getItems()) {
-                    int itemIndex = Integer.parseInt(item) - 1;
-                    Conversation c = conversations.get(itemIndex);
-                    writer.write("--------------------------\n");
-                    for (Textable t : c.getConversation()) {
-                        if (t.getSpeaker() == Message.Speaker.INFO) {
-                            String message = TextReader.INFO_LINE + " " + t.getText() + "\n";
-                            writer.write(message);
-                        } else if (t.getSpeaker() == Message.Speaker.USER) {
-                            String message = TextReader.USER_NAME + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + t.getDefenseStrategy() + "|" + "\n";
-                            writer.write(message);
-                        } else {
-                            String message = c.getSystemName() + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + "\n";
-                            writer.write(message);
-                        }
-                    }
-                    if (c.isPinned()) {
-                        writer.write("#" + c.getDefenseStrategy() + "#" + 1 + "#" + c.getAssesment() + "\n");
-                    } else {
-                        writer.write("#" + c.getDefenseStrategy() + "#" + 0 + "#" + c.getAssesment() + "\n");
-                    }
-                }
-                writer.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            int conversationNumber = Integer.valueOf(value);
+            conversation = chatManager.goToConversation(conversationNumber);
+            updateValues();
+        } catch (NumberFormatException e) {
 
+        } catch (NoValidConversation noValidConversation) {
+            noValidConversation.printStackTrace();
+        }
+    }
+
+    private void exportFile(int itemIndex, File fileExport) {
+        ChatManagerDecorator exportManager = createAssessmentDecorator(itemIndex);
+        saveFile(fileExport, exportManager);
     }
 
     private void handleSave() {
 
+        saveFile(file, chatManager);
+
+    }
+
+    private void saveFile(File fileToExport, ChatManagerDecorator chatManagerToExport) {
         try {
-            if (file != null) {
-                Writer writer = new Writer(file);
-                for (Conversation c : conversations) {
-                    writer.write("--------------------------\n");
-                    for (Textable t : c.getConversation()) {
-                        if (t.getSpeaker() == Message.Speaker.INFO) {
-                            String message = TextReader.INFO_LINE + " " + t.getText() + "\n";
-                            writer.write(message);
-                        } else if (t.getSpeaker() == Message.Speaker.USER) {
-                            String message = TextReader.USER_NAME + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + t.getDefenseStrategy() + "|" + "\n";
-                            writer.write(message);
-                        } else {
-                            String message = c.getSystemName() + ": " + t.getText() + "|" + t.getTopic() + "|" + t.getValue() + "|" + "\n";
-                            writer.write(message);
-                        }
-                    }
-                    if (c.isPinned()) {
-                        writer.write("#" + c.getDefenseStrategy() + "#" + 1 + "#" + c.getAssesment() + "\n");
-                    } else {
-                        writer.write("#" + c.getDefenseStrategy() + "#" + 0 + "#" + c.getAssesment() + "\n");
-                    }
-                }
+            if (fileToExport != null) {
+                ElizaWriter writer = new ElizaWriter(fileToExport.getAbsolutePath());
+                writer.openOverwriting();
+                chatManagerToExport.reset();
+                do {
+                    Conversation c = chatManagerToExport.getNextConversation();
+                    String lineToWrite = c.write();
+                    writer.write(lineToWrite);
+                } while (chatManagerToExport.hastNext());
                 writer.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NoValidConversation noValidConversation) {
+            noValidConversation.printStackTrace();
         }
-
     }
 
     private void handleOpen() {
@@ -430,10 +377,23 @@ public class ChatController implements Initializable {
         if (file != null) {
             filename = file.getAbsolutePath();
             telecomChat.getPrimaryStage().setTitle(file.getName());
-            reader = new TextReader(filename);
+            FileSystemReadable fs = new ElizaFileSystem(filename);
+            InfoRenderer infoRenderer = new InfoRenderer(chatGridPane);
+            SystemRenderer systemRenderer = new SystemRenderer(chatGridPane);
+            UserRenderer userRenderer = new UserRenderer(chatGridPane);
+            reader = new ElizaReader(fs, infoRenderer, userRenderer, systemRenderer);
+            reader.open();
             reader.read();
-            conversations = reader.getConversations();
-            addFirstConversationIntoChatFrame(conversations);
+            LinkedList<Conversation> conversations = reader.getConversations();
+            chatManager = new ChatManager(conversations);
+            unAnnotatedManager = new UnAnnotatedConversationDecorator(chatManager);
+            try {
+                conversation = chatManager.getNextConversation();
+            } catch (NoValidConversation noValidConversation) {
+                noValidConversation.printStackTrace();
+            }
+
+            addConversationIntoChatFrame();
             fillCombobox(conversations);
             if (filename.contains(".tca")) {
                 this.file = file;
@@ -448,30 +408,9 @@ public class ChatController implements Initializable {
         });
     }
 
-    private void addFirstConversationIntoChatFrame(LinkedList<Conversation> conversations) {
-
+    private void addConversationIntoChatFrame() {
         int messageCounter = 0;
-        Conversation con = conversations.getFirst();
-        if (con.getDefenseStrategy() >= 0) {
-            strategyField.setText("" + con.getDefenseStrategy());
-        }
-        if (con.getAssesment() >= 0) {
-            assessmentTextField.setText("" + con.getAssesment());
-        }
-        LinkedList<Textable> messages = con.getConversation();
-        addConversationDialog(messageCounter, messages);
-    }
-
-    private void addConversationIntoChatFrame(LinkedList<Conversation> conversations, int conNummer) {
-        int messageCounter = 0;
-        Conversation nextCon = null;
-        try {
-            nextCon = conversations.get(current_position);
-        } catch (IndexOutOfBoundsException e) {
-            int a = 0;
-        }
-
-        if (nextCon.isPinned()) {
+        if (conversation.isPinned()) {
             pinButton.setText("UnPin");
             sessionPinList.setValue(sessionobservableList.get(current_position));
         } else {
@@ -479,34 +418,19 @@ public class ChatController implements Initializable {
             sessionPinList.setValue(null);
         }
 
-        if (nextCon.getDefenseStrategy() >= 0) {
-            strategyField.setText("" + nextCon.getDefenseStrategy());
+        if (conversation.getDefenseStrategy() >= 0) {
+            strategyField.setText("" + conversation.getDefenseStrategy());
         }
 
-        if (nextCon.getAssesment() >= 0) {
-            assessmentTextField.setText("" + nextCon.getAssesment());
+        if (conversation.getAssesment() >= 0) {
+            assessmentTextField.setText("" + conversation.getAssesment());
         }
 
-        LinkedList<Textable> messages = nextCon.getConversation();
-        addConversationDialog(messageCounter, messages);
+        addConversationDialog();
     }
 
-    private void addConversationDialog(int messageCounter, LinkedList<Textable> messages) {
-        for (Textable m : messages) {
-            if (m.getSpeaker() == Message.Speaker.AGENT) {
-                String text = m.getText();
-                addSystemDialog(messageCounter, text);
-                messageCounter++;
-            } else if (m.getSpeaker() == Message.Speaker.USER) {
-                String text = m.getText();
-                addUserDialog(messageCounter, text);
-                messageCounter++;
-            } else if (m.getSpeaker() == Message.Speaker.INFO) {
-                addInfo(messageCounter, m.getText());
-                messageCounter++;
-            }
-
-        }
+    private void addConversationDialog() {
+        conversation.render();
     }
 
     public void setMainApp(TelekomChat reader) {
@@ -522,11 +446,10 @@ public class ChatController implements Initializable {
 
         List sessionaryLst = new ArrayList();
         for (Conversation c : conversations) {
-            int messagesInConversation = c.getConversation().size();
-            sessionaryLst.add(conversationCounter + "  " + "( " + messagesInConversation + " Message(s) " + ")");
+            sessionaryLst.add(conversationCounter + "  " + "( " + conversation.getTotalMessages() + " Message(s) " + ")");
             if (c.isPinned()) {
                 int conlistNumber = conversationCounter - 1;
-                String s = conversationCounter + "  " + "( " + messagesInConversation + " Message(s) " + ")";
+                String s = conversationCounter + "  " + "( " + conversation.getTotalMessages() + " Message(s) " + ")";
                 pineList.put(s, conlistNumber);
                 sessionPinList.getItems().add(s);
             }
@@ -560,47 +483,48 @@ public class ChatController implements Initializable {
 
     private void moveNext() {
         previousButton.setDisable(false);
-        if (current_position < sessionobservableList.size() - 1) {
-            current_position++;
-            moveToConversation();
-        } else {
+        try {
+            conversation = chatManager.getNextConversation();
+            updateValues();
+        } catch (NoValidConversation noValidConversation) {
             nextButton.setDisable(true);
         }
-    }
-
-    private void moveToConversation() {
-
-        sessionList.getSelectionModel().select(current_position);
-        if (current_position == sessionobservableList.size() - 1) {
-            nextButton.setDisable(true);
-        }
-
-        emptyConversationFields();
-        addConversationIntoChatFrame(conversations, current_position);
 
     }
 
     private void movePrevious() {
         nextButton.setDisable(false);
-        if (current_position > 0) {
-            current_position--;
-            sessionList.getSelectionModel().select(current_position);
-            if (current_position == 0) {
-                previousButton.setDisable(true);
-            }
+        try {
+            conversation = chatManager.getPreviousConversation();
+            updateValues();
+        } catch (NoValidConversation noValidConversation) {
+            previousButton.setDisable(true);
+        }
 
-            emptyConversationFields();
-            addConversationIntoChatFrame(conversations, current_position);
-        } else {
+    }
+
+    private void updateValues() {
+        emptyConversationFields();
+        sessionList.getSelectionModel().select(chatManager.getCurrentPosition());
+        disableNavigationButtons();
+        addConversationIntoChatFrame();
+
+    }
+
+    private void disableNavigationButtons() {
+        if (!chatManager.hastNext()) {
+            nextButton.setDisable(true);
+        }
+        if (!chatManager.hasPrevious()) {
             previousButton.setDisable(true);
         }
     }
 
     private void emptyConversationFields() {
-        if (conversations.get(current_position).getDefenseStrategy() == -1) {
+        if (conversation.getDefenseStrategy() == -1) {
             strategyField.setText("");
         }
-        if (conversations.get(current_position).getAssesment() == -1) {
+        if (conversation.getAssesment() == -1) {
             assessmentTextField.setText("");
         }
     }
@@ -624,226 +548,5 @@ public class ChatController implements Initializable {
         chatGridPane.setVgap(10);
         chatGridPane.setHgap(2);
         screolPane.setContent(chatGridPane);
-    }
-
-    private void addUserDialog(int i, String dialog) {
-        if (!dialog.equals("")) {
-            String userDialog = dialog;
-            Label chatMessage = new Label(userDialog);
-            Label speakerLabel = new Label("User");
-
-            chatMessage.setMinHeight(35);
-            chatMessage.setStyle("-fx-background-color: #EFFFFF; -fx-alignment: left;");
-            speakerLabel.setStyle("-fx-font-weight: bold;");
-
-            chatMessage.setAlignment(Pos.TOP_LEFT);
-
-            chatMessage.setWrapText(true);
-            chatMessage.setPrefWidth(3000);
-
-            GridPane.setHalignment(chatMessage, HPos.LEFT);
-            chatMessage.setPadding(new Insets(0, 10, 0, 0));
-
-            TextField userTopic = new TextField();
-            userTopic.setPrefWidth(100);
-            userTopic.setPadding(new Insets(8, 0, 8, 0));
-            Conversation c = conversations.get(current_position);
-            int messagePositionWithoutInfo = i;
-            if (messagePositionWithoutInfo >= 0 && c.getConversation().get(messagePositionWithoutInfo).getTopic() != -1) {
-                userTopic.setText("" + c.getConversation().get(messagePositionWithoutInfo).getTopic());
-            }
-            userTopic.setId("userTopic" + i);
-
-            TextField userValue = new TextField();
-            userValue.setPrefWidth(100);
-            userValue.setPadding(new Insets(8, 0, 8, 0));
-            if (messagePositionWithoutInfo >= 0 && c.getConversation().get(messagePositionWithoutInfo).getValue() != -1) {
-                userValue.setText("" + c.getConversation().get(messagePositionWithoutInfo).getValue());
-            }
-
-            userValue.setId("userValue" + i);
-
-            Pane p1 = new Pane();
-            p1.setStyle("-fx-background-color: #EFFFFF; -fx-alignment: left;");
-
-            Pane p2 = new Pane();
-            p2.setStyle("-fx-background-color: #EFFFFF; -fx-alignment: left;");
-
-            Pane p3 = new Pane();
-            p3.setStyle("-fx-background-color: #EFFFFF; -fx-alignment: left;");
-
-            p1.getChildren().add(userTopic);
-            p1.setPadding(new Insets(0, 50, 0, 50));
-            p2.getChildren().add(userValue);
-            p2.setPadding(new Insets(0, 50, 0, 50));
-            p3.getChildren().add(speakerLabel);
-            p3.setPadding(new Insets(0, 10, 0, 50));
-
-            chatGridPane.add(p3, 0, i);
-            chatGridPane.add(chatMessage, 1, i);
-            chatGridPane.add(p1, 2, i);
-            chatGridPane.add(p2, 3, i);
-
-            ///////////////////////////////////////////////////////////////////////////////////////
-            TextField defenceStrategy = new TextField();
-            defenceStrategy.setPrefWidth(100);
-            defenceStrategy.setPadding(new Insets(8, 0, 8, 0));
-            defenceStrategy.setId("defenceStrategy" + i);
-            Pane p4 = new Pane();
-            p4.setStyle("-fx-background-color: #EFFFFF; -fx-alignment: left;");
-
-            p4.getChildren().add(defenceStrategy);
-            p4.setPadding(new Insets(0, 10, 0, 50));
-
-            chatGridPane.add(p4, 4, i);
-
-            userTopic.textProperty().addListener((observable, oldValue, newValue) -> {
-                String message = "Sie: " + dialog + "|" + userTopic.getText() + "|" + userValue.getText();
-                annotation.put(userTopic.getId(), message);
-                if (messagePositionWithoutInfo >= 0 && !newValue.isEmpty()) {
-                    if (isNumeric(newValue)) {
-                        c.getConversation().get(messagePositionWithoutInfo).setTopic(Integer.parseInt(newValue));
-                    }
-                }
-            });
-
-            userValue.textProperty().addListener((observable, oldValue, newValue) -> {
-                String message = "Sie: " + dialog + "|" + userTopic.getText() + "|" + userValue.getText();
-                annotation.put(userTopic.getId(), message);
-                if (messagePositionWithoutInfo >= 0) {
-                    if (isNumeric(newValue)) {
-                        c.getConversation().get(messagePositionWithoutInfo).setValue(Integer.parseInt(newValue));
-                    }
-                }
-            });
-
-            defenceStrategy.textProperty().addListener((observable, oldValue, newValue) -> {
-                if (messagePositionWithoutInfo >= 0) {
-                    if (isNumeric(newValue)) {
-                        c.getConversation().get(messagePositionWithoutInfo).setDefenseStrategy(Integer.parseInt(newValue));
-                    }
-                }
-            });
-
-            if (messagePositionWithoutInfo >= 0 && c.getConversation().get(messagePositionWithoutInfo).getDefenseStrategy() != -1) {
-
-                defenceStrategy.setText("" + c.getConversation().get(messagePositionWithoutInfo).getDefenseStrategy());
-            }
-
-        }
-    }
-
-    private void addSystemDialog(int i, String dialog) {
-        if (!dialog.equals("")) {
-            String systemDialog = dialog;
-            Label chatMessage = new Label(systemDialog);
-            Label speakerLabel = new Label("Agent");
-
-            chatMessage.setMinHeight(35);
-            chatMessage.setStyle("-fx-background-color: cornsilk; -fx-alignment: left;");
-            speakerLabel.setStyle("-fx-font-weight: bold;");
-
-            chatMessage.setAlignment(Pos.TOP_LEFT);
-            chatMessage.setWrapText(true);
-            chatMessage.setPrefWidth(3000);
-            GridPane.setHalignment(chatMessage, HPos.LEFT);
-            chatMessage.setText(chatMessage.getText());
-
-            chatMessage.setPadding(new Insets(0, 10, 0, 0));
-
-            Pane p1 = new Pane();
-            p1.setStyle("-fx-background-color: cornsilk; -fx-alignment: left;");
-
-            Pane p2 = new Pane();
-            p2.setStyle("-fx-background-color: cornsilk; -fx-alignment: left;");
-
-            Pane p3 = new Pane();
-            p3.setStyle("-fx-background-color: cornsilk; -fx-alignment: left;");
-
-            TextField systemTopic = new TextField();
-            systemTopic.setPrefWidth(100);
-            systemTopic.setPadding(new Insets(8, 0, 8, 0));
-            Conversation c = conversations.get(current_position);
-            int messagePositionWithoutInfo = i;
-            if (messagePositionWithoutInfo >= 0 && c.getConversation().get(messagePositionWithoutInfo).getTopic() != -1) {
-                systemTopic.setText("" + c.getConversation().get(messagePositionWithoutInfo).getTopic());
-            }
-            systemTopic.setId("systemTopic" + i);
-
-            TextField systemValue = new TextField();
-            systemValue.setPrefWidth(100);
-            systemValue.setPadding(new Insets(8, 0, 8, 0));
-            if (messagePositionWithoutInfo >= 0 && c.getConversation().get(messagePositionWithoutInfo).getValue() != -1) {
-                systemValue.setText("" + c.getConversation().get(messagePositionWithoutInfo).getValue());
-            }
-            systemValue.setId("systemValue" + i);
-
-            p1.getChildren().add(systemTopic);
-            p1.setPadding(new Insets(0, 50, 0, 50));
-            p2.getChildren().add(systemValue);
-            p2.setPadding(new Insets(0, 50, 0, 50));
-            p3.getChildren().add(speakerLabel);
-            p3.setPadding(new Insets(0, 10, 0, 50));
-            chatGridPane.add(p3, 0, i);
-            chatGridPane.add(chatMessage, 1, i);
-            chatGridPane.add(p1, 2, i);
-            chatGridPane.add(p2, 3, i);
-
-            Pane p4 = new Pane();
-            p4.setStyle("-fx-background-color: cornsilk; -fx-alignment: left;");
-
-            p4.setPadding(new Insets(0, 10, 0, 50));
-
-            chatGridPane.add(p4, 4, i);
-
-            systemTopic.textProperty().addListener((observable, oldValue, newValue) -> {
-                String message = "{Name}: " + dialog + "|" + systemTopic.getText() + "|" + systemValue.getText();
-                annotation.put(systemTopic.getId(), message);
-                if (messagePositionWithoutInfo >= 0) {
-                    if (isNumeric(newValue)) {
-                        c.getConversation().get(messagePositionWithoutInfo).setTopic(Integer.parseInt(newValue));
-                    }
-                }
-            });
-
-            systemValue.textProperty().addListener((observable, oldValue, newValue) -> {
-                String message = "{Name}: " + dialog + "|" + systemTopic.getText() + "|" + systemValue.getText();
-                annotation.put(systemTopic.getId(), message);
-                if (messagePositionWithoutInfo >= 0) {
-                    if (isNumeric(newValue)) {
-                        c.getConversation().get(messagePositionWithoutInfo).setValue(Integer.parseInt(newValue));
-                    }
-                }
-            });
-        }
-    }
-
-    private void addInfo(int i, String info) {
-        if (!info.equals("")) {
-            Label chatInfo = new Label(info);
-            Label speakerLabel = new Label("Info");
-
-//            chatInfo.setStyle("-fx-background-color: white; -fx-alignment: left;");
-            speakerLabel.setStyle("-fx-font-weight: bold;");
-
-            chatInfo.setAlignment(Pos.TOP_LEFT);
-
-            chatInfo.setWrapText(true);
-            chatInfo.setPrefWidth(1000);
-
-            GridPane.setHalignment(chatInfo, HPos.LEFT);
-
-            Pane p1 = new Pane();
-//            p1.setStyle("-fx-background-color: white; -fx-alignment: left;");
-            p1.getChildren().add(speakerLabel);
-            p1.setPadding(new Insets(0, 10, 0, 50));
-
-            chatGridPane.add(p1, 0, i);
-            chatGridPane.add(chatInfo, 1, i);
-        }
-    }
-
-    public static boolean isNumeric(String str) {
-        return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
     }
 }
