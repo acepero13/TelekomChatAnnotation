@@ -80,6 +80,10 @@ public class ChatController implements Initializable {
     @FXML
     private ComboBox<String> assessmentResultCombo;
     @FXML
+    private ComboBox<String> defenceStrategyCombo;
+    @FXML
+    private ComboBox<String> defenceStrategyResultCombo;
+    @FXML
     private MenuItem fileOpenItem;
     @FXML
     private MenuItem fileSaveItem;
@@ -148,10 +152,99 @@ public class ChatController implements Initializable {
                 }
             }
         });
+        
+        
+        defenceStrategyCombo.setOnAction((event) -> {
+            int itemIndes = defenceStrategyCombo.getSelectionModel().getSelectedIndex();
+            List defenceStrategyList = new ArrayList();
+            int index = 1;
+            int messagesInConversation = 0;
+            if (itemIndes == 0) {
+                defenceStrategyResultCombo.getItems().clear();
+                for (Conversation c : conversations) {
+                    if (c.getDefenseStrategy() == 0) {
+                        messagesInConversation = c.getConversation().size();
+                        defenceStrategyList.add(index + "");
+                        defenceStrategyResultCombo.getItems().clear();
+                        defenceStrategyResultCombo.getItems().addAll(FXCollections.observableArrayList(defenceStrategyList));
+                    }
+                    index++;
+                }
+            } else if (itemIndes == 1) {
+                defenceStrategyResultCombo.getItems().clear();
+                for (Conversation c : conversations) {
+                    if (c.getDefenseStrategy() == 1) {
+                        messagesInConversation = c.getConversation().size();
+                        defenceStrategyList.add(index + "");
+                        defenceStrategyResultCombo.getItems().clear();
+                        defenceStrategyResultCombo.getItems().addAll(FXCollections.observableArrayList(defenceStrategyList));
+                    }
+                    index++;
+                }
+            } else if (itemIndes == 2) {
+                defenceStrategyResultCombo.getItems().clear();
+                for (Conversation c : conversations) {
+                    if (c.getDefenseStrategy() == 2) {
+                        messagesInConversation = c.getConversation().size();
+                        defenceStrategyList.add(index + "");
+                        defenceStrategyResultCombo.getItems().clear();
+                        defenceStrategyResultCombo.getItems().addAll(FXCollections.observableArrayList(defenceStrategyList));
+                    }
+                    index++;
+                }
+            }else if (itemIndes == 3) {
+                defenceStrategyResultCombo.getItems().clear();
+                for (Conversation c : conversations) {
+                    if (c.getDefenseStrategy() == 3) {
+                        messagesInConversation = c.getConversation().size();
+                        defenceStrategyList.add(index + "");
+                        defenceStrategyResultCombo.getItems().clear();
+                        defenceStrategyResultCombo.getItems().addAll(FXCollections.observableArrayList(defenceStrategyList));
+                    }
+                    index++;
+                }
+            }
+            else if (itemIndes == 4) {
+                defenceStrategyResultCombo.getItems().clear();
+                for (Conversation c : conversations) {
+                    if (c.getDefenseStrategy() == 4) {
+                        messagesInConversation = c.getConversation().size();
+                        defenceStrategyList.add(index + "");
+                        defenceStrategyResultCombo.getItems().clear();
+                        defenceStrategyResultCombo.getItems().addAll(FXCollections.observableArrayList(defenceStrategyList));
+                    }
+                    index++;
+                }
+            }
+            else if (itemIndes == 5) {
+                defenceStrategyResultCombo.getItems().clear();
+                for (Conversation c : conversations) {
+                    if (c.getDefenseStrategy() == 5) {
+                        messagesInConversation = c.getConversation().size();
+                        defenceStrategyList.add(index + "");
+                        defenceStrategyResultCombo.getItems().clear();
+                        defenceStrategyResultCombo.getItems().addAll(FXCollections.observableArrayList(defenceStrategyList));
+                    }
+                    index++;
+                }
+            }
+        });
 
         assessmentResultCombo.setOnAction((event) -> {
             if (assessmentResultCombo.getValue() != null) {
                 int index = Integer.parseInt(assessmentResultCombo.getValue().trim());
+
+                current_position = index - 1;
+                sessionList.getSelectionModel().select(current_position);
+                chatGridPane.getChildren().clear();
+                emptyConversationFields();
+                addConversationIntoChatFrame(conversations, current_position);
+            }
+        });
+        
+        defenceStrategyResultCombo.setOnAction((event) -> {
+            if (defenceStrategyResultCombo.getValue() != null) {
+                int index = Integer.parseInt(defenceStrategyResultCombo.getValue().trim());
 
                 current_position = index - 1;
                 sessionList.getSelectionModel().select(current_position);
@@ -277,6 +370,7 @@ public class ChatController implements Initializable {
         });
 
         fillAssessmentCombo();
+        fillDefenceStrategyCombo();
         showChatOverview();
 
     }
@@ -551,11 +645,24 @@ public class ChatController implements Initializable {
     private void fillAssessmentCombo() {
 
         List assesmentList = new ArrayList();
-        assesmentList.add("Empty");
-        assesmentList.add("Conspicuous");
-        assesmentList.add("Not Conspicuous");
+        assesmentList.add("0 Empty");
+        assesmentList.add("1 Conspicuous");
+        assesmentList.add("2 Not Conspicuous");
 
         assessmentCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
+    }
+    
+    private void fillDefenceStrategyCombo() {
+
+        List defenceStrategy = new ArrayList();
+        defenceStrategy.add("0 Withdrawal");
+        defenceStrategy.add("1 Attack other");
+        defenceStrategy.add("2 Attack Self");
+        defenceStrategy.add("3 Avoidance");
+        defenceStrategy.add("4 positive Interaktion");
+        defenceStrategy.add("5 neutrale Interaktion");
+
+        defenceStrategyCombo.getItems().addAll(FXCollections.observableArrayList(defenceStrategy));
     }
 
     private void moveNext() {
