@@ -1,6 +1,6 @@
 package de.dfki.chatView;
 
-
+import de.dfki.chatView.defenceStrategy.ChatManagerDefenceStrategy;
 import de.dfki.chatView.renderers.InfoRenderer;
 import de.dfki.chatView.renderers.SystemRenderer;
 import de.dfki.chatView.renderers.UserRenderer;
@@ -35,6 +35,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * FXML Controller class
@@ -116,96 +118,35 @@ public class ChatController implements Initializable {
         assessmentCombo.setOnAction((event) -> {
             int itemIndex = assessmentCombo.getSelectionModel().getSelectedIndex();
             List assesmentList = new ArrayList();
-            assessmentResultCombo.getItems().clear();
             ChatManagerDecorator decoratedChatManager = createAssessmentDecorator(itemIndex);
             boolean hasNext = true;
             while (hasNext) {
                 try {
                     decoratedChatManager.getNextConversation();
                     assesmentList.add(decoratedChatManager.getCurrentPosition() + 1 + "");
-                    assessmentResultCombo.getItems().clear();
-                    assessmentResultCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
                 } catch (NoValidConversation noValidConversation) {
                     hasNext = false;
                 }
             }
+            assessmentResultCombo.getItems().clear();
+            assessmentResultCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
         });
-        
-        
+
         defenceStrategyCombo.setOnAction((event) -> {
-            int itemIndes = defenceStrategyCombo.getSelectionModel().getSelectedIndex();
+            int itemIndex = defenceStrategyCombo.getSelectionModel().getSelectedIndex();
             List defenceStrategyList = new ArrayList();
-            int index = 1;
-            int messagesInConversation = 0;
-            if (itemIndes == 0) {
-                defenceStrategyResultCombo.getItems().clear();
-                for (Conversation c : conversations) {
-                    if (c.getDefenseStrategy() == 0) {
-                        messagesInConversation = c.getConversation().size();
-                        defenceStrategyList.add(index + "");
-                        defenceStrategyResultCombo.getItems().clear();
-                        defenceStrategyResultCombo.getItems().addAll(FXCollections.observableArrayList(defenceStrategyList));
-                    }
-                    index++;
-                }
-            } else if (itemIndes == 1) {
-                defenceStrategyResultCombo.getItems().clear();
-                for (Conversation c : conversations) {
-                    if (c.getDefenseStrategy() == 1) {
-                        messagesInConversation = c.getConversation().size();
-                        defenceStrategyList.add(index + "");
-                        defenceStrategyResultCombo.getItems().clear();
-                        defenceStrategyResultCombo.getItems().addAll(FXCollections.observableArrayList(defenceStrategyList));
-                    }
-                    index++;
-                }
-            } else if (itemIndes == 2) {
-                defenceStrategyResultCombo.getItems().clear();
-                for (Conversation c : conversations) {
-                    if (c.getDefenseStrategy() == 2) {
-                        messagesInConversation = c.getConversation().size();
-                        defenceStrategyList.add(index + "");
-                        defenceStrategyResultCombo.getItems().clear();
-                        defenceStrategyResultCombo.getItems().addAll(FXCollections.observableArrayList(defenceStrategyList));
-                    }
-                    index++;
-                }
-            }else if (itemIndes == 3) {
-                defenceStrategyResultCombo.getItems().clear();
-                for (Conversation c : conversations) {
-                    if (c.getDefenseStrategy() == 3) {
-                        messagesInConversation = c.getConversation().size();
-                        defenceStrategyList.add(index + "");
-                        defenceStrategyResultCombo.getItems().clear();
-                        defenceStrategyResultCombo.getItems().addAll(FXCollections.observableArrayList(defenceStrategyList));
-                    }
-                    index++;
+            ChatManagerDecorator decoratedChatManager = createdeDenceStrategyDecorator(itemIndex);
+            boolean hasNext = true;
+            while (hasNext) {
+                try {
+                    decoratedChatManager.getNextConversation();
+                    defenceStrategyList.add(decoratedChatManager.getCurrentPosition() + 1 + "");
+                } catch (NoValidConversation noValidConversation) {
+                    hasNext = false;
                 }
             }
-            else if (itemIndes == 4) {
-                defenceStrategyResultCombo.getItems().clear();
-                for (Conversation c : conversations) {
-                    if (c.getDefenseStrategy() == 4) {
-                        messagesInConversation = c.getConversation().size();
-                        defenceStrategyList.add(index + "");
-                        defenceStrategyResultCombo.getItems().clear();
-                        defenceStrategyResultCombo.getItems().addAll(FXCollections.observableArrayList(defenceStrategyList));
-                    }
-                    index++;
-                }
-            }
-            else if (itemIndes == 5) {
-                defenceStrategyResultCombo.getItems().clear();
-                for (Conversation c : conversations) {
-                    if (c.getDefenseStrategy() == 5) {
-                        messagesInConversation = c.getConversation().size();
-                        defenceStrategyList.add(index + "");
-                        defenceStrategyResultCombo.getItems().clear();
-                        defenceStrategyResultCombo.getItems().addAll(FXCollections.observableArrayList(defenceStrategyList));
-                    }
-                    index++;
-                }
-            }
+            defenceStrategyResultCombo.getItems().clear();
+            defenceStrategyResultCombo.getItems().addAll(FXCollections.observableArrayList(defenceStrategyList));
         });
 
         assessmentResultCombo.setOnAction((event) -> {
@@ -213,22 +154,26 @@ public class ChatController implements Initializable {
                 int index = Integer.parseInt(assessmentResultCombo.getValue().trim());
 
                 current_position = index - 1;
+                try {
+                    conversation = chatManager.goToConversation(current_position+1);
+                } catch (NoValidConversation ex) {
+                    Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 sessionList.getSelectionModel().select(current_position);
-                chatGridPane.getChildren().clear();
-                emptyConversationFields();
-                addConversationIntoChatFrame();
             }
         });
-        
+
         defenceStrategyResultCombo.setOnAction((event) -> {
             if (defenceStrategyResultCombo.getValue() != null) {
                 int index = Integer.parseInt(defenceStrategyResultCombo.getValue().trim());
 
                 current_position = index - 1;
+                try {
+                    conversation = chatManager.goToConversation(current_position+1);
+                } catch (NoValidConversation ex) {
+                    Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 sessionList.getSelectionModel().select(current_position);
-                chatGridPane.getChildren().clear();
-                emptyConversationFields();
-                addConversationIntoChatFrame(conversations, current_position);
             }
         });
 
@@ -352,6 +297,10 @@ public class ChatController implements Initializable {
 
     }
 
+    private ChatManagerDecorator createdeDenceStrategyDecorator(int itemIndex) {
+        return ChatManagerDefenceStrategy.createChatManager(itemIndex, chatManager);
+    }
+    
     private ChatManagerDecorator createAssessmentDecorator(int itemIndex) {
         return ChatManagerAbstractFactory.createChatManager(itemIndex, chatManager);
     }
@@ -374,8 +323,9 @@ public class ChatController implements Initializable {
                 filename = "Not Conspicuous-" + timeStamp;
                 fileExport = openExportFileChooser(filename);
             }
-            if (fileExport != null)
+            if (fileExport != null) {
                 exportFile(itemIndex, fileExport);
+            }
         }
     }
 
@@ -574,7 +524,7 @@ public class ChatController implements Initializable {
 
         assessmentCombo.getItems().addAll(FXCollections.observableArrayList(assesmentList));
     }
-    
+
     private void fillDefenceStrategyCombo() {
 
         List defenceStrategy = new ArrayList();

@@ -37,7 +37,7 @@ public class TelekomChat extends Application{
         try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(TelecomChat.class.getResource("Chat.fxml"));
+            loader.setLocation(TelekomChat.class.getResource("Chat.fxml"));
             rootLayout = (AnchorPane) loader.load();
             
             // Give the controller access to the main app.
