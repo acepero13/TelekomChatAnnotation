@@ -187,6 +187,11 @@ public class ChatController implements Initializable {
         sessionPinList.setOnAction((event) -> {
             if (sessionPinList.getValue() != null) {
                 int position = pineList.get(sessionPinList.getValue());
+                try {
+                    conversation = chatManager.goToConversation(position + 1);
+                } catch (NoValidConversation noValidConversation) {
+                    noValidConversation.printStackTrace();
+                }
                 sessionList.getSelectionModel().select(position);
                 chatGridPane.getChildren().clear();
                 emptyConversationFields();
