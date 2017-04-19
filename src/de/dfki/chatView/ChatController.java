@@ -196,11 +196,7 @@ public class ChatController implements Initializable {
                 chatGridPane.getChildren().clear();
                 emptyConversationFields();
                 addConversationIntoChatFrame();
-                try {
-                    chatManager.goToConversation(position);
-                } catch (NoValidConversation noValidConversation) {
-                    noValidConversation.printStackTrace();
-                }
+
 
             }
         });
