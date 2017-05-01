@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="600.0" prefWidth="1000.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.dfki.chatView.ChatController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="600.0" prefWidth="1020.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.dfki.chatView.ChatController">
     <stylesheets>
         <URL value="@chat.css" />
     </stylesheets>
@@ -77,7 +77,7 @@
                <font>
                   <Font name="System Bold" size="13.0" />
                </font></Label>
-            <Label text="Defence Strategy" GridPane.columnIndex="4">
+            <Label text="Coping Strategy" GridPane.columnIndex="4">
                <font>
                   <Font name="System Bold" size="11.0" />
                </font>
@@ -95,7 +95,7 @@
          </font></Button>
       <Separator layoutY="85.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="85.0" />
       <ComboBox fx:id="sessionPinList" layoutX="745.0" layoutY="44.0" prefWidth="150.0" AnchorPane.rightAnchor="105.0" AnchorPane.topAnchor="44.0" />
-      <Label layoutX="738.0" layoutY="568.0" text="Defence Strategy" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="146.0">
+      <Label layoutX="738.0" layoutY="568.0" text="Coping Strategy" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="146.0">
          <font>
             <Font size="14.0" />
          </font>
@@ -115,13 +115,13 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Label layoutX="482.0" layoutY="563.0" prefHeight="27.0" prefWidth="128.0" text="Overall Assessment" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="390.0" />
+      <Label layoutX="482.0" layoutY="563.0" prefHeight="27.0" prefWidth="129.0" text="Overall Assessment" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="390.0" />
       <TextField fx:id="assessmentTextField" layoutX="616.0" layoutY="563.0" prefHeight="27.0" prefWidth="82.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="302.0" />
       <Separator layoutX="-14.0" layoutY="37.0" prefHeight="3.0" prefWidth="1011.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="37.0" />
       <Button fx:id="exportButton" layoutX="610.0" layoutY="44.0" mnemonicParsing="false" text="Export" AnchorPane.leftAnchor="610.0" AnchorPane.topAnchor="44.0" />
       <ComboBox fx:id="defenceStrategyCombo" layoutX="299.0" layoutY="9.0" prefHeight="27.0" prefWidth="201.0" AnchorPane.leftAnchor="299.0" AnchorPane.topAnchor="9.0" />
-      <Text layoutX="180.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Defence Strategy" AnchorPane.leftAnchor="180.0" AnchorPane.topAnchor="14.0" />
+      <Text layoutX="180.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Coping Strategy" AnchorPane.leftAnchor="180.0" AnchorPane.topAnchor="14.0" />
       <ComboBox fx:id="defenceStrategyResultCombo" layoutX="508.0" layoutY="9.0" prefHeight="27.0" prefWidth="91.0" AnchorPane.leftAnchor="508.0" AnchorPane.topAnchor="9.0" />
-      <Text layoutX="173.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Overall Assessment" AnchorPane.leftAnchor="173.0" AnchorPane.topAnchor="51.0" />
+      <Text layoutX="173.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Overall Assessment" AnchorPane.leftAnchor="155.0" AnchorPane.topAnchor="51.0" />
    </children>
 </AnchorPane>
